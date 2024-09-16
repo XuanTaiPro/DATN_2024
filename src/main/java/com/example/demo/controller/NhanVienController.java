@@ -72,8 +72,8 @@ public class NhanVienController {
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
         }
-        if (nvRepo.existsByMa(nhanVienRequest.getMa())) {
-            return ResponseEntity.badRequest().body("mã đã tồn tại");
+        if (nvRepo.existsByMaAndIdNot(nhanVienRequest.getMa(), id)) {
+            return ResponseEntity.badRequest().body("Mã đã tồn tại tại nhân viên khác.");
         }
         if (nvRepo.findById(id).isPresent()) {
             if (nvRepo.findById(id).get().getQuyen().getId() != 1) { //quyền admin id = 1

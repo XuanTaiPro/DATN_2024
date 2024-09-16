@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NhanVienRepository extends JpaRepository<NhanVien,Integer> {
     boolean existsByMa(String ma);
+    boolean existsByMaAndIdNot(String ma, Integer id);
 }
