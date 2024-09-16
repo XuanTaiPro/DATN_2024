@@ -42,7 +42,11 @@ public class NhanVienController {
 
     @GetMapping("detail/{id}")
     public ResponseEntity<?> detail(@PathVariable Integer id) {
-        return ResponseEntity.ok().body(nvRepo.findById(id).stream().map(NhanVien::toResponse));
+        if (nvRepo.findById(id).isPresent()) {
+            return ResponseEntity.ok().body(nvRepo.findById(id).stream().map(NhanVien::toResponse));
+        }else {
+            return ResponseEntity.badRequest().body("Không tìm thấy id để hiển thị");
+        }
     }
 
     @PostMapping("add")
@@ -72,6 +76,9 @@ public class NhanVienController {
             return ResponseEntity.badRequest().body("mã đã tồn tại");
         }
         if (nvRepo.findById(id).isPresent()) {
+            if (nvRepo.findById(id).get().getQuyen().getId() != 1) { //quyền admin id = 1
+                return ResponseEntity.status(403).body("Bạn không có quyền sửa thông tin này");
+            }
             NhanVien nhanVien = nhanVienRequest.toEntity();
             nhanVien.setId(id);
             nhanVien.setQuyen(qRepo.getById(nhanVienRequest.getIdQuyen()));
@@ -85,6 +92,9 @@ public class NhanVienController {
     @DeleteMapping("delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         if (nvRepo.findById(id).isPresent()) {
+            if (nvRepo.findById(id).get().getQuyen().getId() != 1) { //quyền admin id = 1
+                return ResponseEntity.status(403).body("Bạn không có quyền sửa thông tin này");
+            }
             nvRepo.deleteById(id);
             return ResponseEntity.ok("Xóa thành công");
         } else {

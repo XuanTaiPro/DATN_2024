@@ -14,7 +14,7 @@ public class NhanVienRequest {
     private Integer id;
 
     @NotBlank(message = "Mã Không được để trống")
-    @Pattern(regexp = "^NV\\d{3}$", message = "Mã phải có định dạng TBxxx (VD: TB001, TB002,...)")
+    @Pattern(regexp = "^NV\\d{3}$", message = "Mã phải có định dạng TBxxx (VD: NV001, NV002,...)")
     private String ma;
 
     @NotBlank(message = "Tên Không được để trống")

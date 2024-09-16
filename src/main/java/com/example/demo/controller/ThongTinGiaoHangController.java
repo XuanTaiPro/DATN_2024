@@ -52,6 +52,10 @@ public class ThongTinGiaoHangController {
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
         }
+        //khách hàng này đã có địa chỉ này rồi k thêm được
+        if (ttghRepo.existsByKhachHang_IdAndDcNguoiNhan(thongTinGiaoHangRequest.getIdKH(), thongTinGiaoHangRequest.getDcNguoiNhan())) {
+            return ResponseEntity.badRequest().body("Địa chỉ nhận hàng đã tồn tại cho khách hàng này.");
+        }
         ThongTinGiaoHang thongTinGiaoHang = thongTinGiaoHangRequest.toEntity();
         thongTinGiaoHang.setKhachHang(khRepo.getById(thongTinGiaoHangRequest.getIdKH()));
         ttghRepo.save(thongTinGiaoHang);
@@ -64,6 +68,9 @@ public class ThongTinGiaoHangController {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
+        }
+        if (ttghRepo.existsByKhachHang_IdAndDcNguoiNhan(thongTinGiaoHangRequest.getIdKH(), thongTinGiaoHangRequest.getDcNguoiNhan())) {
+            return ResponseEntity.badRequest().body("Địa chỉ nhận hàng đã tồn tại cho khách hàng này.");
         }
         if (ttghRepo.findById(id).isPresent()) {
             ThongTinGiaoHang thongTinGiaoHang = thongTinGiaoHangRequest.toEntity();

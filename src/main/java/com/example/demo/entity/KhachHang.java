@@ -21,6 +21,7 @@ public class KhachHang {
     @Column(name = "MA", unique = true)
     @NotBlank(message = "Mã khách hàng không được để trống")
     @Size(max = 10, message = "Mã khách hàng không được dài quá 10 ký tự")
+    @Pattern(regexp = "^KH\\d{3}$", message = "Mã phải có định dạng TBxxx (VD: KH001, KH002,...)")
     private String ma;
 
     @Column(name = "Ten")

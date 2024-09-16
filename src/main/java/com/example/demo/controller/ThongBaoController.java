@@ -43,7 +43,11 @@ public class ThongBaoController {
 
     @GetMapping("detail/{id}")
     public ResponseEntity<?> detail(@PathVariable Integer id) {
-        return ResponseEntity.ok().body(tbRepo.findById(id).stream().map(ThongBao::toResponse));
+        if (tbRepo.findById(id).isPresent()) {
+            return ResponseEntity.ok().body(tbRepo.findById(id).stream().map(ThongBao::toResponse));
+        }else {
+            return ResponseEntity.badRequest().body("Không tìm thấy id để hiển thị");
+        }
     }
 
     @PostMapping("add")
