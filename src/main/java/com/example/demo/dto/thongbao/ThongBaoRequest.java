@@ -20,7 +20,7 @@ public class ThongBaoRequest {
     private String id;
 
     @NotBlank(message = "Mã Không được để trống")
-    @Pattern(regexp = "^TB\\d{3}$", message = "Mã phải có định dạng TBxxx (VD: TB001, TB002,...)")
+//    @Pattern(regexp = "^TB\\d{3}$", message = "Mã phải có định dạng TBxxx (VD: TB001, TB002,...)")
     private String ma;
 
     @NotBlank(message = "Nội dung Không được để trống")

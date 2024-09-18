@@ -64,9 +64,9 @@ public class ThongBaoController {
         if (thongBaoRequest.getMa() == null || thongBaoRequest.getMa().isEmpty()) {//nếu mã chưa đc điền thì tự động thêm mã
             thongBaoRequest.setMa(generateCodeAll.generateMaThongBao());
         }
-        if (tbRepo.existsByMa(thongBaoRequest.getMa())) {
-            return ResponseEntity.badRequest().body("mã đã tồn tại");
-        }
+//        if (tbRepo.existsByMa(thongBaoRequest.getMa())) {
+//            return ResponseEntity.badRequest().body("mã đã tồn tại");
+//        }
         ThongBao thongBao = thongBaoRequest.toEntity();
         thongBao.setKhachHang(khRepo.getById(thongBaoRequest.getIdKH()));
         tbRepo.save(thongBao);
@@ -80,9 +80,9 @@ public class ThongBaoController {
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
         }
-        if (tbRepo.existsByMa(thongBaoRequest.getMa())) {
-            return ResponseEntity.badRequest().body("mã đã tồn tại");
-        }
+//        if (tbRepo.existsByMa(thongBaoRequest.getMa())) {
+//            return ResponseEntity.badRequest().body("mã đã tồn tại");
+//        }
         if (tbRepo.findById(id).isPresent()) {
             ThongBao thongBao = thongBaoRequest.toEntity();
             thongBao.setId(id);

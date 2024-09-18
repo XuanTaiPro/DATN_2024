@@ -79,26 +79,14 @@ public class KhachHangController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody KhachHang khachHangDetails, BindingResult bindingResult) {
+    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody KhachHang khachHang, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
         }
-
-        Optional<KhachHang> optionalKhachHang = khRepo.findById(id);
-        if (optionalKhachHang.isPresent()) {
-            KhachHang khachHang = optionalKhachHang.get();
-            khachHang.setMa(khachHangDetails.getMa());
-            khachHang.setTen(khachHangDetails.getTen());
-            khachHang.setEmail(khachHangDetails.getEmail());
-            khachHang.setPassw(khachHangDetails.getPassw());
-            khachHang.setGioiTinh(khachHangDetails.getGioiTinh());
-            khachHang.setSdt(khachHangDetails.getSdt());
-            khachHang.setDiaChi(khachHangDetails.getDiaChi());
-            khachHang.setTrangThai(khachHangDetails.getTrangThai());
-            khachHang.setNgayTao(khachHangDetails.getNgayTao());
-            khachHang.setNgaySua(khachHangDetails.getNgaySua());
+        if (khRepo.existsById(id)) {
+            khachHang.setId(id);
             return ResponseEntity.ok(khRepo.save(khachHang));
         } else {
             return ResponseEntity.notFound().build();

@@ -32,7 +32,7 @@ public class GenerateCodeAll {
     public String generateMaKhachHang() {
         String ma;
         do {
-            ma = generateMa("KH", 3);
+            ma = generateMa("KH", 10);
         } while (khRepo.existsByMa(ma));
         return ma;
     }
@@ -40,7 +40,7 @@ public class GenerateCodeAll {
     public String generateMaNhanVien() {
         String ma;
         do {
-            ma = generateMa("NV", 3);
+            ma = generateMa("NV", 10);
         } while (nvRepo.existsByMa(ma));
         return ma;
     }
@@ -48,7 +48,7 @@ public class GenerateCodeAll {
     public String generateMaThongBao() {
         String ma;
         do {
-            ma = generateMa("TB", 3);
+            ma = generateMa("TB", 10);
         } while (tbRepo.existsByMa(ma));
         return ma;
     }
@@ -56,7 +56,7 @@ public class GenerateCodeAll {
     public String generateMaVoucher() {
         String ma;
         do {
-            ma = generateMa("VC", 3);
+            ma = generateMa("VC", 10);
         } while (vcRepo.existsByMa(ma));
         return ma;
     }
@@ -64,7 +64,7 @@ public class GenerateCodeAll {
     public String generateMaGHCT() {
         String ma;
         do {
-            ma = generateMa("GHCT", 3);
+            ma = generateMa("GHCT", 10);
         } while (ghctRepo.existsByMa(ma));
         return ma;
     }

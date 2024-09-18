@@ -69,9 +69,9 @@ public class GioHangChiTietController {
         if (gioHangChiTietRequest.getMa() == null || gioHangChiTietRequest.getMa().isEmpty()) {//nếu mã chưa đc điền thì tự động thêm mã
             gioHangChiTietRequest.setMa(generateCodeAll.generateMaGHCT());
         }
-        if (ghRepo.existsByMa(gioHangChiTietRequest.getMa())) {
-            return ResponseEntity.badRequest().body("mã đã tồn tại");
-        }
+//        if (ghRepo.existsByMa(gioHangChiTietRequest.getMa())) {
+//            return ResponseEntity.badRequest().body("mã đã tồn tại");
+//        }
         GioHangChiTiet gioHangChiTiet = gioHangChiTietRequest.toEntity();
         gioHangChiTiet.setKhachHang(khRepo.getById(gioHangChiTietRequest.getIdKH()));
         gioHangChiTiet.setChiTietSanPham(ctspRepo.getById(gioHangChiTietRequest.getIdCTSP()));

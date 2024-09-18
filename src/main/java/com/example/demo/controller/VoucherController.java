@@ -62,9 +62,9 @@ public class VoucherController {
         if (voucherRequest.getMa() == null || voucherRequest.getMa().isEmpty()) {//nếu mã chưa đc điền thì tự động thêm mã
             voucherRequest.setMa(generateCodeAll.generateMaVoucher());
         }
-        if (vcRepo.existsByMa(voucherRequest.getMa())) {
-            return ResponseEntity.badRequest().body("mã đã tồn tại");
-        }
+//        if (vcRepo.existsByMa(voucherRequest.getMa())) {
+//            return ResponseEntity.badRequest().body("mã đã tồn tại");
+//        }
         Voucher voucher = voucherRequest.toEntity();
         voucher.setKhachHang(khRepo.getById(voucherRequest.getIdKH()));
         vcRepo.save(voucher);
@@ -78,9 +78,9 @@ public class VoucherController {
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
         }
-        if (vcRepo.existsByMa(voucherRequest.getMa())) {
-            return ResponseEntity.badRequest().body("mã đã tồn tại");
-        }
+//        if (vcRepo.existsByMa(voucherRequest.getMa())) {
+//            return ResponseEntity.badRequest().body("mã đã tồn tại");
+//        }
         if (vcRepo.findById(id).isPresent()) {
             Voucher voucher = voucherRequest.toEntity();
             voucher.setId(id);

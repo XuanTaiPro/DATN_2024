@@ -21,7 +21,7 @@ public class GioHangChiTietRequest {
     private String id;
 
     @NotBlank(message = "Mã Không được để trống")
-    @Pattern(regexp = "^GHCT\\d{3}$", message = "Mã phải có định dạng TBxxx (VD: GHCT001, GHCT002,...)")
+//    @Pattern(regexp = "^GHCT\\d{3}$", message = "Mã phải có định dạng TBxxx (VD: GHCT001, GHCT002,...)")
     private String ma;
 
     @NotNull(message = "Số lượng Không được để trống")

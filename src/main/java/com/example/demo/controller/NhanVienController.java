@@ -64,9 +64,9 @@ public class NhanVienController {
         if (nhanVienRequest.getMa() == null || nhanVienRequest.getMa().isEmpty()) {//nếu mã chưa đc điền thì tự động thêm mã
             nhanVienRequest.setMa(generateCodeAll.generateMaNhanVien());
         }
-        if (nvRepo.existsByMa(nhanVienRequest.getMa())) {
-            return ResponseEntity.badRequest().body("mã đã tồn tại");
-        }
+//        if (nvRepo.existsByMa(nhanVienRequest.getMa())) {
+//            return ResponseEntity.badRequest().body("mã đã tồn tại");
+//        }
         NhanVien nhanVien = nhanVienRequest.toEntity();
         nhanVien.setQuyen(qRepo.getById(nhanVienRequest.getIdQuyen()));
         nvRepo.save(nhanVien);
@@ -85,11 +85,9 @@ public class NhanVienController {
         }
         if (nvRepo.findById(id).isPresent()) {
             NhanVien nhanVien = nvRepo.findById(id).get();
-            // Lấy quyền admin từ database
             Quyen quyenAdmin = qRepo.findByTen("Admin");
-            // Kiểm tra nếu quyền không phải admin
             if (!nhanVien.getQuyen().getId().equals(quyenAdmin.getId())) {
-                return ResponseEntity.status(403).body("Bạn không có quyền sửa thông tin này");
+                return ResponseEntity.badRequest().body("Bạn không có quyền sửa thông tin này");
             }
             NhanVien nhanVienUpdate = nhanVienRequest.toEntity();
             nhanVienUpdate.setId(id);
@@ -108,7 +106,7 @@ public class NhanVienController {
             Quyen quyenAdmin = qRepo.findByTen("Admin");
 
             if (!nhanVien.getQuyen().getId().equals(quyenAdmin.getId())) {
-                return ResponseEntity.status(403).body("Bạn không có quyền xóa thông tin này");
+                return ResponseEntity.badRequest().body("Bạn không có quyền xóa thông tin này");
             }
             nvRepo.deleteById(id);
             return ResponseEntity.ok("Xóa thành công");
