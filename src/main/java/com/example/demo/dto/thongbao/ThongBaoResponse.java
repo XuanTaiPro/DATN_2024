@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class ThongBaoResponse {
 
-    private Integer id;
+    private String id;
 
     private String ma;
 

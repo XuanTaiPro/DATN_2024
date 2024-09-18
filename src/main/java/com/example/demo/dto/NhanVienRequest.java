@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class NhanVienRequest {
-    private Integer id;
+    private String id;
 
     @NotBlank(message = "Mã Không được để trống")
     @Pattern(regexp = "^NV\\d{3}$", message = "Mã phải có định dạng TBxxx (VD: NV001, NV002,...)")
@@ -49,7 +49,7 @@ public class NhanVienRequest {
     private String ngaySua;
 
     @NotNull(message = "id quyền Không được để trống")
-    private Integer idQuyen;
+    private String idQuyen;
 
 
     public NhanVien toEntity() {

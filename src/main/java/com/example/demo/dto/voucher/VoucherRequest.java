@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class VoucherRequest {
 
-    private Integer id;
+    private String id;
 
     @NotBlank(message = "Mã Không được để trống")
     @Pattern(regexp = "^VC\\d{3}$", message = "Mã phải có định dạng TBxxx (VD: TB001, TB002,...)")
@@ -44,7 +44,7 @@ public class VoucherRequest {
     private String loaiVoucher;
 
     @NotNull(message = "idKH Không được để trống")
-    private Integer idKH;
+    private String idKH;
 
     public Voucher toEntity() {
         return new Voucher(id, ma, ten, giamGia, ngayTao, hsd, soLuong, trangThai, loaiVoucher, null);

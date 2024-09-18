@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class ThongTinGiaoHangRequest {
-    private Integer id;
+    private String id;
 
     @NotBlank(message = "SDT người nhận Không được để trống")
     @Pattern(regexp = "^0\\d{9}$", message = "Số điện thoại phải có 10 chữ số và bắt đầu bằng 0")
@@ -33,7 +33,7 @@ public class ThongTinGiaoHangRequest {
     private String ngaySua;
 
     @NotNull(message = "idKH Không được để trống")
-    private Integer idKH;
+    private String idKH;
 
     public ThongTinGiaoHang toEntity(){
         return new ThongTinGiaoHang(id,sdtNguoiNhan,tenNguoiNhan,dcNguoiNhan,ngayTao,ngaySua,null);

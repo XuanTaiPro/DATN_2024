@@ -8,10 +8,13 @@ import com.example.demo.entity.ThongBao;
 import com.example.demo.entity.Voucher;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.repository.VoucherRepository;
+import com.example.demo.service.GenerateCodeAll;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,6 +28,9 @@ public class VoucherController {
 
     @Autowired
     private KhachHangRepository khRepo;
+
+    @Autowired
+    private GenerateCodeAll generateCodeAll;
 
     @GetMapping()
     public ResponseEntity<?> findAll() {
@@ -42,12 +48,23 @@ public class VoucherController {
     }
 
     @GetMapping("detail/{id}")
-    public ResponseEntity<?> detail(@PathVariable Integer id) {
+    public ResponseEntity<?> detail(@PathVariable String id) {
         return ResponseEntity.ok().body(vcRepo.findById(id).stream().map(Voucher::toResponse));
     }
 
     @PostMapping("add")
-    public ResponseEntity<?> add(@RequestBody VoucherRequest voucherRequest) {
+    public ResponseEntity<?> add(@Valid @RequestBody VoucherRequest voucherRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            StringBuilder mess = new StringBuilder();
+            bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
+            return ResponseEntity.badRequest().body(mess.toString());
+        }
+        if (voucherRequest.getMa() == null || voucherRequest.getMa().isEmpty()) {//nếu mã chưa đc điền thì tự động thêm mã
+            voucherRequest.setMa(generateCodeAll.generateMaVoucher());
+        }
+        if (vcRepo.existsByMa(voucherRequest.getMa())) {
+            return ResponseEntity.badRequest().body("mã đã tồn tại");
+        }
         Voucher voucher = voucherRequest.toEntity();
         voucher.setKhachHang(khRepo.getById(voucherRequest.getIdKH()));
         vcRepo.save(voucher);
@@ -55,7 +72,15 @@ public class VoucherController {
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody VoucherRequest voucherRequest) {
+    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody VoucherRequest voucherRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            StringBuilder mess = new StringBuilder();
+            bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
+            return ResponseEntity.badRequest().body(mess.toString());
+        }
+        if (vcRepo.existsByMa(voucherRequest.getMa())) {
+            return ResponseEntity.badRequest().body("mã đã tồn tại");
+        }
         if (vcRepo.findById(id).isPresent()) {
             Voucher voucher = voucherRequest.toEntity();
             voucher.setId(id);
@@ -68,7 +93,7 @@ public class VoucherController {
     }
 
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable String id) {
         if (vcRepo.findById(id).isPresent()) {
             vcRepo.deleteById(id);
             return ResponseEntity.ok("Xóa thành công");

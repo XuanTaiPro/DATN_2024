@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 public class KhachHang {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private Integer id;
+    private String id;
 
     @Column(name = "MA", unique = true)
     @NotBlank(message = "Mã khách hàng không được để trống")

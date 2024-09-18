@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class VoucherResponse {
-    private Integer id;
+    private String id;
 
     private String ma;
 

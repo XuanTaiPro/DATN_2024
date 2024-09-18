@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class NhanVienResponse {
-    private Integer id;
+    private String id;
     private String ma;
     private String ten;
     private String email;

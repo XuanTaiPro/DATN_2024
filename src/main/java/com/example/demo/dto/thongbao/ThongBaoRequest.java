@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class ThongBaoRequest {
-    private Integer id;
+    private String id;
 
     @NotBlank(message = "Mã Không được để trống")
     @Pattern(regexp = "^TB\\d{3}$", message = "Mã phải có định dạng TBxxx (VD: TB001, TB002,...)")
@@ -37,7 +37,7 @@ public class ThongBaoRequest {
     private Integer trangThai;
 
     @NotNull(message = "idKH Không được để trống")
-    private Integer idKH;
+    private String idKH;
 
     public ThongBao toEntity(){
         return new ThongBao(id,ma,noiDung,ngayGui,ngayDoc,trangThai,null);

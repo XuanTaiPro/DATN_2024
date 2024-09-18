@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "THONGTINGIAOHANG")
 public class ThongTinGiaoHang {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private Integer id;
+    private String id;
 
     @Column(name = "SDTNGUOINHAN")
     private String sdtNguoiNhan;

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class ThongTinGiaoHangResponse {
-    private Integer id;
+    private String id;
 
     private String sdtNguoiNhan;
 

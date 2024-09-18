@@ -41,7 +41,7 @@ public class ThongTinGiaoHangController {
     }
 
     @GetMapping("detail/{id}")
-    public ResponseEntity<?> detail(@PathVariable Integer id) {
+    public ResponseEntity<?> detail(@PathVariable String id) {
         return ResponseEntity.ok().body(ttghRepo.findById(id).stream().map(ThongTinGiaoHang::toResponse));
     }
 
@@ -63,7 +63,7 @@ public class ThongTinGiaoHangController {
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody ThongTinGiaoHangRequest thongTinGiaoHangRequest,BindingResult bindingResult) {
+    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody ThongTinGiaoHangRequest thongTinGiaoHangRequest,BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
@@ -84,7 +84,7 @@ public class ThongTinGiaoHangController {
     }
 
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable String id) {
         if (ttghRepo.findById(id).isPresent()) {
             ttghRepo.deleteById(id);
             return ResponseEntity.ok("Xóa thành công");

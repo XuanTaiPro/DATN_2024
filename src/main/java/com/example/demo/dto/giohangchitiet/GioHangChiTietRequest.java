@@ -1,0 +1,46 @@
+package com.example.demo.dto.giohangchitiet;
+
+import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.GioHangChiTiet;
+import com.example.demo.entity.KhachHang;
+import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class GioHangChiTietRequest {
+    private String id;
+
+    @NotBlank(message = "Mã Không được để trống")
+    @Pattern(regexp = "^GHCT\\d{3}$", message = "Mã phải có định dạng TBxxx (VD: GHCT001, GHCT002,...)")
+    private String ma;
+
+    @NotNull(message = "Số lượng Không được để trống")
+    @Min(value = 1,message = "số lượng phải là số lớn hơn 0")
+    private Integer soLuong;
+
+    @NotNull(message = "Trạng thái Không được để trống")
+    private Integer trangThai;
+
+    @NotBlank(message = "Ngày tạo Không được để trống")
+    private String ngayTao;
+
+    @NotNull(message = "id Khách hàng Không được để trống")
+    private String idKH;
+
+    @NotNull(message = "id Chi tiết sản phẩm Không được để trống")
+    private String idCTSP;
+
+    public GioHangChiTiet toEntity(){
+        return new GioHangChiTiet(id,ma,soLuong,trangThai,ngayTao,null,null);
+    }
+}

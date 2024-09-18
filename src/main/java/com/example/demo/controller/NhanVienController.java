@@ -3,8 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.dto.NhanVienRequest;
 import com.example.demo.dto.NhanVienResponse;
 import com.example.demo.entity.NhanVien;
+import com.example.demo.entity.Quyen;
 import com.example.demo.repository.NhanVienRepository;
 import com.example.demo.repository.QuyenRepository;
+import com.example.demo.service.GenerateCodeAll;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +27,9 @@ public class NhanVienController {
     @Autowired
     private QuyenRepository qRepo;
 
+    @Autowired
+    private GenerateCodeAll generateCodeAll;
+
     @GetMapping()
     public ResponseEntity<?> findAll() {
         List<NhanVienResponse> list = new ArrayList<>();
@@ -41,7 +46,7 @@ public class NhanVienController {
     }
 
     @GetMapping("detail/{id}")
-    public ResponseEntity<?> detail(@PathVariable Integer id) {
+    public ResponseEntity<?> detail(@PathVariable String id) {
         if (nvRepo.findById(id).isPresent()) {
             return ResponseEntity.ok().body(nvRepo.findById(id).stream().map(NhanVien::toResponse));
         }else {
@@ -56,6 +61,9 @@ public class NhanVienController {
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
         }
+        if (nhanVienRequest.getMa() == null || nhanVienRequest.getMa().isEmpty()) {//nếu mã chưa đc điền thì tự động thêm mã
+            nhanVienRequest.setMa(generateCodeAll.generateMaNhanVien());
+        }
         if (nvRepo.existsByMa(nhanVienRequest.getMa())) {
             return ResponseEntity.badRequest().body("mã đã tồn tại");
         }
@@ -66,7 +74,7 @@ public class NhanVienController {
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id,@Valid @RequestBody NhanVienRequest nhanVienRequest,BindingResult bindingResult) {
+    public ResponseEntity<?> update(@PathVariable String id,@Valid @RequestBody NhanVienRequest nhanVienRequest,BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
@@ -76,13 +84,17 @@ public class NhanVienController {
             return ResponseEntity.badRequest().body("Mã đã tồn tại tại nhân viên khác.");
         }
         if (nvRepo.findById(id).isPresent()) {
-            if (nvRepo.findById(id).get().getQuyen().getId() != 1) { //quyền admin id = 1
+            NhanVien nhanVien = nvRepo.findById(id).get();
+            // Lấy quyền admin từ database
+            Quyen quyenAdmin = qRepo.findByTen("Admin");
+            // Kiểm tra nếu quyền không phải admin
+            if (!nhanVien.getQuyen().getId().equals(quyenAdmin.getId())) {
                 return ResponseEntity.status(403).body("Bạn không có quyền sửa thông tin này");
             }
-            NhanVien nhanVien = nhanVienRequest.toEntity();
-            nhanVien.setId(id);
-            nhanVien.setQuyen(qRepo.getById(nhanVienRequest.getIdQuyen()));
-            nvRepo.save(nhanVien);
+            NhanVien nhanVienUpdate = nhanVienRequest.toEntity();
+            nhanVienUpdate.setId(id);
+            nhanVienUpdate.setQuyen(qRepo.getById(nhanVienRequest.getIdQuyen()));
+            nvRepo.save(nhanVienUpdate);
             return ResponseEntity.ok("Update thành công ");
         } else {
             return ResponseEntity.badRequest().body("Không tìm thấy id cần update");
@@ -90,10 +102,13 @@ public class NhanVienController {
     }
 
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable String id) {
         if (nvRepo.findById(id).isPresent()) {
-            if (nvRepo.findById(id).get().getQuyen().getId() != 1) { //quyền admin id = 1
-                return ResponseEntity.status(403).body("Bạn không có quyền sửa thông tin này");
+            NhanVien nhanVien = nvRepo.findById(id).get();
+            Quyen quyenAdmin = qRepo.findByTen("Admin");
+
+            if (!nhanVien.getQuyen().getId().equals(quyenAdmin.getId())) {
+                return ResponseEntity.status(403).body("Bạn không có quyền xóa thông tin này");
             }
             nvRepo.deleteById(id);
             return ResponseEntity.ok("Xóa thành công");

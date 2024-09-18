@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.dto.giohangchitiet.GioHangChiTietResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,9 +13,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "GIOHANGCHITIET")
 public class GioHangChiTiet {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private Integer id;
+    private String id;
 
     @Column(name = "MA")
     private String ma;
@@ -32,4 +33,11 @@ public class GioHangChiTiet {
     @JoinColumn(name = "IDKH")
     private KhachHang khachHang;
 
+    @ManyToOne
+    @JoinColumn(name = "IDSPCT")
+    private ChiTietSanPham chiTietSanPham;
+
+    public GioHangChiTietResponse toResponse() {
+        return new GioHangChiTietResponse(id, ma, soLuong, trangThai, ngayTao, khachHang.getTen(), chiTietSanPham.getMa(), chiTietSanPham.getGia());
+    }
 }
