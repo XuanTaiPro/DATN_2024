@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.NhanVienRequest;
-import com.example.demo.dto.NhanVienResponse;
+import com.example.demo.dto.nhanvien.NhanVienRequest;
+import com.example.demo.dto.nhanvien.NhanVienResponse;
 import com.example.demo.entity.NhanVien;
 import com.example.demo.entity.Quyen;
 import com.example.demo.repository.NhanVienRepository;

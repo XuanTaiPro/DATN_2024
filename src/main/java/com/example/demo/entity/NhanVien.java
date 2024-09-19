@@ -1,10 +1,9 @@
 package com.example.demo.entity;
 
-import com.example.demo.dto.NhanVienResponse;
+import com.example.demo.dto.nhanvien.NhanVienResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity

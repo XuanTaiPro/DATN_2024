@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.nhanvien;
 
 import com.example.demo.entity.NhanVien;
 import jakarta.persistence.Column;

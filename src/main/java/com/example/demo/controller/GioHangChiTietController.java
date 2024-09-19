@@ -1,12 +1,9 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.dto.NhanVienRequest;
-import com.example.demo.dto.NhanVienResponse;
 import com.example.demo.dto.giohangchitiet.GioHangChiTietRequest;
 import com.example.demo.dto.giohangchitiet.GioHangChiTietResponse;
 import com.example.demo.entity.GioHangChiTiet;
-import com.example.demo.entity.NhanVien;
 import com.example.demo.repository.*;
 import com.example.demo.service.GenerateCodeAll;
 import jakarta.validation.Valid;
