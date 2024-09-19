@@ -1,22 +1,16 @@
-package com.example.demo.entity;
+package com.example.demo.dto.khachhang;
 
-import com.example.demo.dto.khachhang.KhachHangResponse;
-import jakarta.persistence.*;
+import com.example.demo.entity.KhachHang;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name = "KHACHHANG")
-public class KhachHang {
-
-    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+public class KhachHangRequest {
     private String id;
 
     @Column(name = "MA", unique = true)
@@ -64,7 +58,7 @@ public class KhachHang {
     @NotBlank(message = "Ngày sửa không được để trống")
     private String ngaySua;
 
-    public KhachHangResponse toResponse() {
-        return new KhachHangResponse(id, ma, ten, email, gioiTinh, sdt, diaChi, trangThai);
+    public KhachHang toEntity() {
+        return new KhachHang(id, ma, ten, email, passw, gioiTinh, sdt, diaChi, trangThai, ngayTao, ngaySua);
     }
 }

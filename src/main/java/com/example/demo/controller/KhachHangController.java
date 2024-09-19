@@ -1,6 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.khachhang.KhachHangRequest;
+import com.example.demo.dto.khachhang.KhachHangResponse;
+import com.example.demo.dto.voucher.VoucherResponse;
 import com.example.demo.entity.KhachHang;
+import com.example.demo.entity.Voucher;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.service.GenerateCodeAll;
 import jakarta.validation.Valid;
@@ -16,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/khachhang")
+@RequestMapping("khachhang")
 public class KhachHangController {
 
     @Autowired
@@ -30,11 +34,26 @@ public class KhachHangController {
         return khRepo.findAll();
     }
 
-    @GetMapping("/page")
+    @GetMapping("findAllNotPW")
+    public ResponseEntity<?> findAllNotPW() {
+        List<KhachHangResponse> list = new ArrayList<>();
+        khRepo.findAll().forEach(c -> list.add(c.toResponse()));
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("page")
     public ResponseEntity<?> page(@RequestParam(defaultValue = "0") Integer page) {
         Pageable pageable = PageRequest.of(page, 5);
         List<KhachHang> list = new ArrayList<>();
         khRepo.findAll(pageable).forEach(list::add);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("pageNotPW")
+    public ResponseEntity<?> pageNotPW(@RequestParam(defaultValue = "0") Integer page) {
+        Pageable p = PageRequest.of(page, 10);
+        List<KhachHangResponse> list = new ArrayList<>();
+        khRepo.findAll(p).forEach(c -> list.add(c.toResponse()));
         return ResponseEntity.ok(list);
     }
 
@@ -55,7 +74,7 @@ public class KhachHangController {
 //        return newCode;
 //    }
 
-    @GetMapping("/{id}")
+    @GetMapping("detail/{id}")
     public ResponseEntity<KhachHang> getKhachHangById(@PathVariable String id) {
         Optional<KhachHang> khachHang = khRepo.findById(id);
         if (khachHang.isPresent()) {
@@ -65,35 +84,39 @@ public class KhachHangController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<?> add(@Valid @RequestBody KhachHang khachHang, BindingResult bindingResult) {
+    @PostMapping("add")
+    public ResponseEntity<?> add(@Valid @RequestBody KhachHangRequest khachHangRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
         }
-        if (khachHang.getMa() == null || khachHang.getMa().isEmpty()) {
-            khachHang.setMa(generateCodeAll.generateMaKhachHang());
+        if (khachHangRequest.getMa() == null || khachHangRequest.getMa().isEmpty()) {
+            khachHangRequest.setMa(generateCodeAll.generateMaKhachHang());
         }
-        return ResponseEntity.ok(khRepo.save(khachHang));
+        KhachHang khachHang = khachHangRequest.toEntity();
+        khRepo.save(khachHang);
+        return ResponseEntity.ok("thêm thành công");
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody KhachHang khachHang, BindingResult bindingResult) {
+    @PutMapping("update/{id}")
+    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody KhachHangRequest khachHangRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
         }
-        if (khRepo.existsById(id)) {
+        if (khRepo.findById(id).isPresent()) {
+            KhachHang khachHang = khachHangRequest.toEntity();
             khachHang.setId(id);
-            return ResponseEntity.ok(khRepo.save(khachHang));
+            khRepo.save(khachHang);
+            return ResponseEntity.ok("Update thành công ");
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body("Không tìm thấy id cần update");
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("delete/{id}")
     public ResponseEntity<Void> deleteKhachHang(@PathVariable String id) {
         Optional<KhachHang> khachHang = khRepo.findById(id);
         if (khachHang.isPresent()) {
