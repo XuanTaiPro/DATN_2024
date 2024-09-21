@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping(name = "nhanvien")
+@RequestMapping("nhanvien")
 public class NhanVienController {
+
     @Autowired
     private NhanVienRepository nvRepo;
 
@@ -67,6 +69,9 @@ public class NhanVienController {
 //        if (nvRepo.existsByMa(nhanVienRequest.getMa())) {
 //            return ResponseEntity.badRequest().body("mã đã tồn tại");
 //        }
+        if (nhanVienRequest.getId() == null || nhanVienRequest.getId().isEmpty()) {
+            nhanVienRequest.setId(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        }
         NhanVien nhanVien = nhanVienRequest.toEntity();
         nhanVien.setQuyen(qRepo.getById(nhanVienRequest.getIdQuyen()));
         nvRepo.save(nhanVien);

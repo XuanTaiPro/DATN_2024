@@ -19,9 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping(name = "voucher")
+@RequestMapping("voucher")
 public class VoucherController {
     @Autowired
     private VoucherRepository vcRepo;
@@ -58,6 +59,9 @@ public class VoucherController {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
+        }
+        if (voucherRequest.getId() == null || voucherRequest.getId().isEmpty()) {
+            voucherRequest.setId(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         }
         if (voucherRequest.getMa() == null || voucherRequest.getMa().isEmpty()) {//nếu mã chưa đc điền thì tự động thêm mã
             voucherRequest.setMa(generateCodeAll.generateMaVoucher());

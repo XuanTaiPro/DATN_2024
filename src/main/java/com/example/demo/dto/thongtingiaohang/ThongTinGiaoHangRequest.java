@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -33,9 +35,16 @@ public class ThongTinGiaoHangRequest {
     private String ngaySua;
 
     @NotNull(message = "idKH Không được để trống")
+    private Integer trangThai;
+
+    @NotNull(message = "idKH Không được để trống")
     private String idKH;
 
+
     public ThongTinGiaoHang toEntity(){
-        return new ThongTinGiaoHang(id,sdtNguoiNhan,tenNguoiNhan,dcNguoiNhan,ngayTao,ngaySua,null);
+        if (this.id == null || this.id.isEmpty()) {
+            this.id = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        }
+        return new ThongTinGiaoHang(id,sdtNguoiNhan,tenNguoiNhan,dcNguoiNhan,ngayTao,ngaySua,trangThai,null);
     }
 }

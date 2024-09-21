@@ -33,11 +33,14 @@ public class ThongTinGiaoHang {
     @Column(name = "NGAYSUA")
     private String ngaySua;
 
+    @Column(name = "TRANGTHAI")
+    private Integer trangThai;
+
     @ManyToOne
     @JoinColumn(name = "IDKHACHHANG")
     private KhachHang khachHang;
 
     public ThongTinGiaoHangResponse toResponse() {
-        return new ThongTinGiaoHangResponse(id, sdtNguoiNhan, tenNguoiNhan, dcNguoiNhan, ngayTao, ngaySua, khachHang.getTen(), khachHang.getEmail());
+        return new ThongTinGiaoHangResponse(id, sdtNguoiNhan, tenNguoiNhan, dcNguoiNhan, ngayTao, ngaySua,trangThai, khachHang.getTen(), khachHang.getEmail());
     }
 }

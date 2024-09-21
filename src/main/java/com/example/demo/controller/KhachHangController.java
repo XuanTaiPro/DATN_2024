@@ -2,9 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.khachhang.KhachHangRequest;
 import com.example.demo.dto.khachhang.KhachHangResponse;
-import com.example.demo.dto.voucher.VoucherResponse;
 import com.example.demo.entity.KhachHang;
-import com.example.demo.entity.Voucher;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.service.GenerateCodeAll;
 import jakarta.validation.Valid;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("khachhang")
@@ -93,6 +92,9 @@ public class KhachHangController {
         }
         if (khachHangRequest.getMa() == null || khachHangRequest.getMa().isEmpty()) {
             khachHangRequest.setMa(generateCodeAll.generateMaKhachHang());
+        }
+        if (khachHangRequest.getId() == null || khachHangRequest.getId().isEmpty()) {
+            khachHangRequest.setId(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         }
         KhachHang khachHang = khachHangRequest.toEntity();
         khRepo.save(khachHang);

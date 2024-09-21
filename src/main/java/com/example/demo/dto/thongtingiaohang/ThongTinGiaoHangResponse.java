@@ -20,6 +20,8 @@ public class ThongTinGiaoHangResponse {
 
     private String ngaySua;
 
+    private Integer trangThai;
+
     private String tenKH;
 
     private String emailKH;

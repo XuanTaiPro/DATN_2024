@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping(name = "thongtingiaohang")
+@RequestMapping("thongtingiaohang")
 public class ThongTinGiaoHangController {
     @Autowired
     private ThongTinGiaoHangRepository ttghRepo;
@@ -51,6 +52,9 @@ public class ThongTinGiaoHangController {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
+        }
+        if (thongTinGiaoHangRequest.getId() == null || thongTinGiaoHangRequest.getId().isEmpty()) {
+            thongTinGiaoHangRequest.setId(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         }
         //khách hàng này đã có địa chỉ này rồi k thêm được
         if (ttghRepo.existsByKhachHang_IdAndDcNguoiNhan(thongTinGiaoHangRequest.getIdKH(), thongTinGiaoHangRequest.getDcNguoiNhan())) {

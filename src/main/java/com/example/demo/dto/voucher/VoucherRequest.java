@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -47,6 +49,9 @@ public class VoucherRequest {
     private String idKH;
 
     public Voucher toEntity() {
+        if (this.id == null || this.id.isEmpty()) {
+            this.id = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        }
         return new Voucher(id, ma, ten, giamGia, ngayTao, hsd, soLuong, trangThai, loaiVoucher, null);
     }
 }

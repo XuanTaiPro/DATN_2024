@@ -17,9 +17,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping(name = "thongbao")
+@RequestMapping("thongbao")
 public class ThongBaoController {
     @Autowired
     private ThongBaoRepository tbRepo;
@@ -60,6 +61,9 @@ public class ThongBaoController {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
+        }
+        if (thongBaoRequest.getId() == null || thongBaoRequest.getId().isEmpty()) {
+            thongBaoRequest.setId(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         }
         if (thongBaoRequest.getMa() == null || thongBaoRequest.getMa().isEmpty()) {//nếu mã chưa đc điền thì tự động thêm mã
             thongBaoRequest.setMa(generateCodeAll.generateMaThongBao());

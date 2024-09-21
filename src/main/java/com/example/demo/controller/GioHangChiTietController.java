@@ -16,9 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping(name = "giohangchitiet")
+@RequestMapping("giohangchitiet")
 public class GioHangChiTietController {
     @Autowired
     private GioHangChiTietRepository ghRepo;
@@ -69,6 +70,9 @@ public class GioHangChiTietController {
 //        if (ghRepo.existsByMa(gioHangChiTietRequest.getMa())) {
 //            return ResponseEntity.badRequest().body("mã đã tồn tại");
 //        }
+        if (gioHangChiTietRequest.getId() == null || gioHangChiTietRequest.getId().isEmpty()) {
+            gioHangChiTietRequest.setId(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        }
         GioHangChiTiet gioHangChiTiet = gioHangChiTietRequest.toEntity();
         gioHangChiTiet.setKhachHang(khRepo.getById(gioHangChiTietRequest.getIdKH()));
         gioHangChiTiet.setChiTietSanPham(ctspRepo.getById(gioHangChiTietRequest.getIdCTSP()));
