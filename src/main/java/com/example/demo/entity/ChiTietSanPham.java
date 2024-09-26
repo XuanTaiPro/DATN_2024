@@ -17,13 +17,12 @@ import java.time.LocalDateTime;
 public class ChiTietSanPham {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private String id;
 
     @NotBlank(message = "Mã không được để trống")
     @Size(max = 255, message = "Mã không được vượt quá 255 ký tự")
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Mã chỉ được chứa chữ cái và số!")
+//    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Mã chỉ được chứa chữ cái và số!")
     @Column(name = "MA")
     private String ma;
 

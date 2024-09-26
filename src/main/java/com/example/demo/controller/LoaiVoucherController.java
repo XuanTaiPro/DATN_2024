@@ -66,7 +66,7 @@ public class LoaiVoucherController {
             loaiVoucherRequest.setId(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         }
         if (loaiVoucherRequest.getMa() == null || loaiVoucherRequest.getMa().isEmpty()) {//nếu mã chưa đc điền thì tự động thêm mã
-            loaiVoucherRequest.setMa(generateCodeAll.generateMaThongBao());
+            loaiVoucherRequest.setMa(generateCodeAll.generateMaLVC());
         }
         LoaiVoucher loaiVoucher = loaiVoucherRequest.toEntity();
         lvcRepo.save(loaiVoucher);

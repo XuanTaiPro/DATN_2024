@@ -23,7 +23,7 @@ public class Voucher {
     @Column(name = "Ten")
     private String ten;
 
-    @Column(name = "GIAMGIA")
+    @Column(name = "GIAGIAM")
     private String giamGia;
 
     @Column(name = "NGAYTAO")
