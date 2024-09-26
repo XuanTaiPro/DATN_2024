@@ -32,8 +32,20 @@ public class VoucherRequest {
     @NotBlank(message = "Ngày tạo Không được để trống")
     private String ngayTao;
 
-    @NotBlank(message = "hsd Không được để trống")
-    private String hsd;
+    @NotBlank(message = "Ngày sửa Không được để trống")
+    private String ngaySua;
+
+    @NotBlank(message = "giảm min Không được để trống")
+    private String giamMin;
+
+    @NotBlank(message = "giảm max Không được để trống")
+    private String giamMax;
+
+    @NotBlank(message = "điều kiện Không được để trống")
+    private String dieuKien;
+
+    @NotBlank(message = "ngày kết thúc Không được để trống")
+    private String ngayKetThuc;
 
     @NotNull(message = "Số lượng Không được để trống")
     @Min(value = 1,message = "số lượng phải là số lớn hơn 0")
@@ -42,16 +54,13 @@ public class VoucherRequest {
     @NotNull(message = "Trạng thái Không được để trống")
     private Integer trangThai;
 
-    @NotBlank(message = "Loại voucher Không được để trống")
-    private String loaiVoucher;
-
-    @NotNull(message = "idKH Không được để trống")
-    private String idKH;
+    @NotNull(message = "idLoaiVC Không được để trống")
+    private String idLoaiVC;
 
     public Voucher toEntity() {
         if (this.id == null || this.id.isEmpty()) {
             this.id = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         }
-        return new Voucher(id, ma, ten, giamGia, ngayTao, hsd, soLuong, trangThai, loaiVoucher, null);
+        return new Voucher(id, ma, ten, giamGia, ngayTao,ngaySua, giamMin,giamMax,dieuKien,ngayKetThuc, soLuong, trangThai, null);
     }
 }

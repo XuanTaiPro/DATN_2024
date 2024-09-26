@@ -37,28 +37,28 @@ public class ChiTietSanPham {
     @Column(name = "SONGAYSUDUNG")
     private String soNgaySuDung;
 
-    @NotBlank(message = "Thành phần không được để trống")
-    @Size(max = 255, message = "Thành phần không được vượt quá 255 ký tự")
-    @Column(name = "THANHPHAN")
-    private String thanhPhan;
-
-    @NotBlank(message = "Công dụng không được để trống")
-    @Size(max = 255, message = "Công dụng không được vượt quá 255 ký tự")
-    @Column(name = "CONGDUNG")
-    private String congDung;
+//    @NotBlank(message = "Thành phần không được để trống")
+//    @Size(max = 255, message = "Thành phần không được vượt quá 255 ký tự")
+//    @Column(name = "THANHPHAN")
+//    private String thanhPhan;
+//
+//    @NotBlank(message = "Công dụng không được để trống")
+//    @Size(max = 255, message = "Công dụng không được vượt quá 255 ký tự")
+//    @Column(name = "CONGDUNG")
+//    private String congDung;
 
     @NotBlank(message = "Hướng dẫn sử dụng không được để trống")
     @Size(max = 255, message = "Hướng dẫn sử dụng không được vượt quá 255 ký tự")
     @Column(name = "HDSD")
     private String HDSD;
 
-    @Min(value = 0, message = "Tuổi tối thiểu không hợp lệ")
-    @Column(name = "TUOIMIN")
-    private int tuoiMin;
-
-    @Min(value = 0, message = "Tuổi tối đa không hợp lệ")
-    @Column(name = "TUOIMAX")
-    private int tuoiMax;
+//    @Min(value = 0, message = "Tuổi tối thiểu không hợp lệ")
+//    @Column(name = "TUOIMIN")
+//    private int tuoiMin;
+//
+//    @Min(value = 0, message = "Tuổi tối đa không hợp lệ")
+//    @Column(name = "TUOIMAX")
+//    private int tuoiMax;
 
     @NotNull(message = "Hạn sử dụng không được để trống")
     @FutureOrPresent(message = "Hạn sử dụng phải là ngày hiện tại hoặc trong tương lai")
@@ -69,6 +69,11 @@ public class ChiTietSanPham {
     @PastOrPresent(message = "Ngày nhập phải là ngày hiện tại hoặc trong quá khứ")
     @Column(name = "NGAYNHAP")
     private LocalDateTime ngayNhap;
+
+    @NotNull(message = "Ngày nhập không được để trống")
+    @PastOrPresent(message = "Ngày nhập phải là ngày hiện tại hoặc trong quá khứ")
+    @Column(name = "NGAYSANXUAT")
+    private LocalDateTime ngaySanXuat;
 
     @Min(value = 1, message = "Số lượng phải lớn hơn 0")
     @Column(name = "SOLUONG")
@@ -88,8 +93,5 @@ public class ChiTietSanPham {
 
     @Column(name = "IDSP")
     private String idSP;
-
-    @Column(name = "IDGIAMGIA")
-    private String idGiamGia;
 
 }

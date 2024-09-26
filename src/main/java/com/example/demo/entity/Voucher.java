@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "VOUCHER")
 public class Voucher {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private String id;
 
@@ -30,8 +29,20 @@ public class Voucher {
     @Column(name = "NGAYTAO")
     private String ngayTao;
 
-    @Column(name = "HSD")
-    private String hsd;
+    @Column(name = "NGAYSUA")
+    private String ngaySua;
+
+    @Column(name = "GIAMMIN")
+    private String giamMin;
+
+    @Column(name = "GIAMMAX")
+    private String giamMax;
+
+    @Column(name = "DIEUKIEN")
+    private String dieuKien;
+
+    @Column(name = "NGAYKETTHUC")
+    private String ngayKetThuc;
 
     @Column(name = "SOLUONG")
     private Integer soLuong;
@@ -39,14 +50,11 @@ public class Voucher {
     @Column(name = "TRANGTHAI")
     private Integer trangThai;
 
-    @Column(name = "LOAIVOUCHER")
-    private String loaiVoucher;
-
     @ManyToOne
-    @JoinColumn(name = "IDKH")
-    private KhachHang khachHang;
+    @JoinColumn(name = "IDLOAIVC")
+    private LoaiVoucher loaiVoucher;
 
     public VoucherResponse toResponse() {
-        return new VoucherResponse(id, ma, ten, giamGia, ngayTao, hsd, soLuong, trangThai, loaiVoucher, khachHang.getTen(), khachHang.getEmail());
+        return new VoucherResponse(id, ma, ten, giamGia, ngayTao, ngaySua, giamMin, giamMax, dieuKien,ngayKetThuc,soLuong,trangThai, loaiVoucher.getMa(), loaiVoucher.getTen());
     }
 }

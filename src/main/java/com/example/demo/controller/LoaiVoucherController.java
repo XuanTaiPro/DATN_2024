@@ -1,14 +1,14 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.loaivoucher.LoaiVoucherRequest;
+import com.example.demo.dto.loaivoucher.LoaiVoucherResponse;
 import com.example.demo.dto.thongbao.ThongBaoRequest;
 import com.example.demo.dto.thongbao.ThongBaoResponse;
-import com.example.demo.dto.voucher.VoucherRequest;
-import com.example.demo.dto.voucher.VoucherResponse;
+import com.example.demo.entity.LoaiVoucher;
 import com.example.demo.entity.ThongBao;
-import com.example.demo.entity.Voucher;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.repository.LoaiVoucherRepository;
-import com.example.demo.repository.VoucherRepository;
+import com.example.demo.repository.ThongBaoRepository;
 import com.example.demo.service.GenerateCodeAll;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +23,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("voucher")
-public class VoucherController {
-    @Autowired
-    private VoucherRepository vcRepo;
-
+@RequestMapping("loaivoucher")
+public class LoaiVoucherController {
     @Autowired
     private LoaiVoucherRepository lvcRepo;
 
@@ -36,61 +33,57 @@ public class VoucherController {
 
     @GetMapping()
     public ResponseEntity<?> findAll() {
-        List<VoucherResponse> list = new ArrayList<>();
-        vcRepo.findAll().forEach(c -> list.add(c.toResponse()));
+        List<LoaiVoucherResponse> list = new ArrayList<>();
+        lvcRepo.findAll().forEach(c -> list.add(c.toResponse()));
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("page")
     public ResponseEntity<?> page(@RequestParam(defaultValue = "0") Integer page) {
         Pageable p = PageRequest.of(page, 10);
-        List<VoucherResponse> list = new ArrayList<>();
-        vcRepo.findAll(p).forEach(c -> list.add(c.toResponse()));
+        List<LoaiVoucherResponse> list = new ArrayList<>();
+        lvcRepo.findAll(p).forEach(c -> list.add(c.toResponse()));
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("detail/{id}")
     public ResponseEntity<?> detail(@PathVariable String id) {
-        return ResponseEntity.ok().body(vcRepo.findById(id).stream().map(Voucher::toResponse));
+        if (lvcRepo.findById(id).isPresent()) {
+            return ResponseEntity.ok().body(lvcRepo.findById(id).stream().map(LoaiVoucher::toResponse));
+        }else {
+            return ResponseEntity.badRequest().body("Không tìm thấy id để hiển thị");
+        }
     }
 
     @PostMapping("add")
-    public ResponseEntity<?> add(@Valid @RequestBody VoucherRequest voucherRequest, BindingResult bindingResult) {
+    public ResponseEntity<?> add(@Valid @RequestBody LoaiVoucherRequest loaiVoucherRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
         }
-        if (voucherRequest.getId() == null || voucherRequest.getId().isEmpty()) {
-            voucherRequest.setId(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        if (loaiVoucherRequest.getId() == null || loaiVoucherRequest.getId().isEmpty()) {
+            loaiVoucherRequest.setId(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         }
-        if (voucherRequest.getMa() == null || voucherRequest.getMa().isEmpty()) {//nếu mã chưa đc điền thì tự động thêm mã
-            voucherRequest.setMa(generateCodeAll.generateMaVoucher());
+        if (loaiVoucherRequest.getMa() == null || loaiVoucherRequest.getMa().isEmpty()) {//nếu mã chưa đc điền thì tự động thêm mã
+            loaiVoucherRequest.setMa(generateCodeAll.generateMaThongBao());
         }
-//        if (vcRepo.existsByMa(voucherRequest.getMa())) {
-//            return ResponseEntity.badRequest().body("mã đã tồn tại");
-//        }
-        Voucher voucher = voucherRequest.toEntity();
-        voucher.setLoaiVoucher(lvcRepo.getById(voucherRequest.getIdLoaiVC()));
-        vcRepo.save(voucher);
+        LoaiVoucher loaiVoucher = loaiVoucherRequest.toEntity();
+        lvcRepo.save(loaiVoucher);
         return ResponseEntity.ok("thêm thành công");
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody VoucherRequest voucherRequest, BindingResult bindingResult) {
+    public ResponseEntity<?> update(@PathVariable String id,@Valid @RequestBody LoaiVoucherRequest  loaiVoucherRequest,BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
         }
-//        if (vcRepo.existsByMa(voucherRequest.getMa())) {
-//            return ResponseEntity.badRequest().body("mã đã tồn tại");
-//        }
-        if (vcRepo.findById(id).isPresent()) {
-            Voucher voucher = voucherRequest.toEntity();
-            voucher.setId(id);
-            voucher.setLoaiVoucher(lvcRepo.getById(voucherRequest.getIdLoaiVC()));
-            vcRepo.save(voucher);
+        if (lvcRepo.findById(id).isPresent()) {
+            LoaiVoucher loaiVoucher = loaiVoucherRequest.toEntity();
+            loaiVoucher.setId(id);
+            lvcRepo.save(loaiVoucher);
             return ResponseEntity.ok("Update thành công ");
         } else {
             return ResponseEntity.badRequest().body("Không tìm thấy id cần update");
@@ -99,8 +92,8 @@ public class VoucherController {
 
     @DeleteMapping("delete/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
-        if (vcRepo.findById(id).isPresent()) {
-            vcRepo.deleteById(id);
+        if (lvcRepo.findById(id).isPresent()) {
+            lvcRepo.deleteById(id);
             return ResponseEntity.ok("Xóa thành công");
         } else {
             return ResponseEntity.badRequest().body("Không tìm thấy id cần xóa");
