@@ -119,4 +119,35 @@ public class NhanVienController {
             return ResponseEntity.badRequest().body("Không tìm thấy id cần xóa");
         }
     }
+
+    @GetMapping("search")
+    public ResponseEntity<?> searchByName(@RequestParam String ten) {
+        List<NhanVienResponse> list = new ArrayList<>();
+        nvRepo.findByTenContainingIgnoreCase(ten).forEach(nhanVien -> list.add(nhanVien.toResponse()));
+
+        if (list.isEmpty()) {
+            return ResponseEntity.badRequest().body("Không tìm thấy nhân viên với tên: " + ten);
+        }
+
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("loc")
+    public ResponseEntity<?> filterNhanVien(
+            @RequestParam(required = false) String gioiTinh,
+            @RequestParam(required = false) String diaChi,
+            @RequestParam(required = false) Integer trangThai) {
+
+        List<NhanVienResponse> list = new ArrayList<>();
+        nvRepo.locNhanVien(gioiTinh, diaChi, trangThai)
+                .forEach(nhanVien -> list.add(nhanVien.toResponse()));
+
+        if (list.isEmpty()) {
+            return ResponseEntity.badRequest().body("Không tìm thấy nhân viên với các tiêu chí lọc");
+        }
+
+        return ResponseEntity.ok(list);
+    }
+
+
 }

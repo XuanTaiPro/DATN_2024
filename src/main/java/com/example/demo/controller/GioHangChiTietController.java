@@ -108,4 +108,11 @@ public class GioHangChiTietController {
             return ResponseEntity.badRequest().body("Không tìm thấy id cần xóa");
         }
     }
+
+    @GetMapping("sapXepNgaytao")
+    public ResponseEntity<?> findAllSortedByNgayTao() {
+        List<GioHangChiTietResponse> list = new ArrayList<>();
+        ghRepo.findAllOrderByNgayTaoDesc().forEach(c -> list.add(c.toResponse()));
+        return ResponseEntity.ok(list);
+    }
 }

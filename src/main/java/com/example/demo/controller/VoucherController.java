@@ -106,4 +106,32 @@ public class VoucherController {
             return ResponseEntity.badRequest().body("Không tìm thấy id cần xóa");
         }
     }
+
+    @GetMapping("search")
+    public ResponseEntity<?> searchVoucher(@RequestParam String ten) {
+        List<VoucherResponse> list = new ArrayList<>();
+        vcRepo.findByTenContainingIgnoreCase(ten).forEach(voucher -> list.add(voucher.toResponse()));
+
+        if (list.isEmpty()) {
+            return ResponseEntity.badRequest().body("Không tìm thấy voucher với tên: " + ten);
+        }
+
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("filter")
+    public ResponseEntity<?> filterVoucher(
+            @RequestParam(required = false) String giamMin,
+            @RequestParam(required = false) String giamMax,
+            @RequestParam(required = false) String ngayKetThuc) {
+
+        List<VoucherResponse> list = new ArrayList<>();
+        vcRepo.filterVouchers(giamMin, giamMax, ngayKetThuc).forEach(voucher -> list.add(voucher.toResponse()));
+
+        if (list.isEmpty()) {
+            return ResponseEntity.badRequest().body("Không tìm thấy voucher nào phù hợp.");
+        }
+
+        return ResponseEntity.ok(list);
+    }
 }

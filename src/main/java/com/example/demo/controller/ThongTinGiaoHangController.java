@@ -96,4 +96,21 @@ public class ThongTinGiaoHangController {
             return ResponseEntity.badRequest().body("Không tìm thấy id cần xóa");
         }
     }
+
+
+    @GetMapping("search")
+    public ResponseEntity<?> searchByTenOrSdtNguoiNhan(
+            @RequestParam(required = false) String tenNguoiNhan,
+            @RequestParam(required = false) String sdtNguoiNhan) {
+
+        List<ThongTinGiaoHangResponse> list = new ArrayList<>();
+        ttghRepo.searchByTenOrSdtNguoiNhan(tenNguoiNhan, sdtNguoiNhan)
+                .forEach(thongTin -> list.add(thongTin.toResponse()));
+
+        if (list.isEmpty()) {
+            return ResponseEntity.badRequest().body("Không tìm thấy thông tin giao hàng cần tìm kiếm.");
+        }
+
+        return ResponseEntity.ok(list);
+    }
 }

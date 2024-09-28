@@ -4,6 +4,7 @@ import com.example.demo.dto.loaivoucher.LoaiVoucherRequest;
 import com.example.demo.dto.loaivoucher.LoaiVoucherResponse;
 import com.example.demo.dto.thongbao.ThongBaoRequest;
 import com.example.demo.dto.thongbao.ThongBaoResponse;
+import com.example.demo.dto.voucher.VoucherResponse;
 import com.example.demo.entity.LoaiVoucher;
 import com.example.demo.entity.ThongBao;
 import com.example.demo.repository.KhachHangRepository;
@@ -98,5 +99,16 @@ public class LoaiVoucherController {
         } else {
             return ResponseEntity.badRequest().body("Không tìm thấy id cần xóa");
         }
+    }
+    @GetMapping("search")
+    public ResponseEntity<?> searchLoaiVoucher(@RequestParam String ten) {
+        List<LoaiVoucherResponse> list = new ArrayList<>();
+        lvcRepo.findByTenContainingIgnoreCaseAnd(ten).forEach(voucher -> list.add(voucher.toResponse()));
+
+        if (list.isEmpty()) {
+            return ResponseEntity.badRequest().body("Không tìm thấy voucher với tên: " + ten);
+        }
+
+        return ResponseEntity.ok(list);
     }
 }

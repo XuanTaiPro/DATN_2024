@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.khachhang.KhachHangRequest;
 import com.example.demo.dto.khachhang.KhachHangResponse;
+import com.example.demo.dto.voucher.VoucherResponse;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.service.GenerateCodeAll;
@@ -127,5 +128,17 @@ public class KhachHangController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("search")
+    public ResponseEntity<?> searchVoucher(@RequestParam String ten) {
+        List<KhachHangResponse> list = new ArrayList<>();
+        khRepo.findByTenContainingIgnoreCase(ten).forEach(voucher -> list.add(voucher.toResponse()));
+
+        if (list.isEmpty()) {
+            return ResponseEntity.badRequest().body("Không tìm thấy voucher với tên: " + ten);
+        }
+
+        return ResponseEntity.ok(list);
     }
 }
