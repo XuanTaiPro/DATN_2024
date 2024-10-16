@@ -15,9 +15,6 @@ import java.util.UUID;
 public class KhachHangRequest {
     private String id;
 
-    @NotBlank(message = "Mã khách hàng không được để trống")
-    @Size(max = 10, message = "Mã khách hàng không được dài quá 10 ký tự")
-    @Pattern(regexp = "^KH\\d{3}$", message = "Mã phải có định dạng TBxxx (VD: KH001, KH002,...)")
     private String ma;
 
     @NotBlank(message = "Tên không được để trống")
@@ -44,10 +41,10 @@ public class KhachHangRequest {
     @NotNull(message = "Trạng thái không được để trống")
     private Integer trangThai;
 
-    @NotBlank(message = "Ngày tạo không được để trống")
+//    @NotBlank(message = "Ngày tạo không được để trống")
     private String ngayTao;
 
-    @NotBlank(message = "Ngày sửa không được để trống")
+//    @NotBlank(message = "Ngày sửa không được để trống")
     private String ngaySua;
 
     public KhachHang toEntity() {

@@ -22,10 +22,10 @@ public class LoaiVoucherRequest {
     @NotBlank(message = "Tên không được để trống")
     private String ten;
 
-    @NotBlank(message = "Ngày tạo không được để trống")
+//    @NotBlank(message = "Ngày tạo không được để trống")
     private String ngayTao;
 
-    @NotBlank(message = "Ngày sửa không được để trống")
+//    @NotBlank(message = "Ngày sửa không được để trống")
     private String ngaySua;
 
     @NotNull(message = "Trạng thái không được để trống")

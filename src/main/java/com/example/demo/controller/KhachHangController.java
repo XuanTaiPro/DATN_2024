@@ -4,6 +4,7 @@ import com.example.demo.dto.khachhang.KhachHangRequest;
 import com.example.demo.dto.khachhang.KhachHangResponse;
 import com.example.demo.dto.voucher.VoucherResponse;
 import com.example.demo.entity.KhachHang;
+import com.example.demo.entity.ThongBao;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.service.GenerateCodeAll;
 import jakarta.validation.Valid;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("khachhang")
 public class KhachHangController {
@@ -75,12 +76,11 @@ public class KhachHangController {
 //    }
 
     @GetMapping("detail/{id}")
-    public ResponseEntity<KhachHang> getKhachHangById(@PathVariable String id) {
-        Optional<KhachHang> khachHang = khRepo.findById(id);
-        if (khachHang.isPresent()) {
-            return ResponseEntity.ok(khachHang.get());
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> detail(@PathVariable String id) {
+        if (khRepo.findById(id).isPresent()) {
+            return ResponseEntity.ok().body(khRepo.findById(id).stream().map(KhachHang::toResponse));
+        }else {
+            return ResponseEntity.badRequest().body("Không tìm thấy id để hiển thị");
         }
     }
 
@@ -89,6 +89,7 @@ public class KhachHangController {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
+            System.out.println(mess.toString());
             return ResponseEntity.badRequest().body(mess.toString());
         }
         if (khachHangRequest.getMa() == null || khachHangRequest.getMa().isEmpty()) {
@@ -107,6 +108,7 @@ public class KhachHangController {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
+            System.out.println(mess.toString());
             return ResponseEntity.badRequest().body(mess.toString());
         }
         if (khRepo.findById(id).isPresent()) {

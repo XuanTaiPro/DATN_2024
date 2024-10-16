@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("voucher")
 public class VoucherController {
@@ -59,6 +59,7 @@ public class VoucherController {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
+            System.out.println(mess.toString());
             return ResponseEntity.badRequest().body(mess.toString());
         }
         if (voucherRequest.getId() == null || voucherRequest.getId().isEmpty()) {

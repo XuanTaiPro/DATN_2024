@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("nhanvien")
 public class NhanVienController {
@@ -51,16 +51,17 @@ public class NhanVienController {
     public ResponseEntity<?> detail(@PathVariable String id) {
         if (nvRepo.findById(id).isPresent()) {
             return ResponseEntity.ok().body(nvRepo.findById(id).stream().map(NhanVien::toResponse));
-        }else {
+        } else {
             return ResponseEntity.badRequest().body("Không tìm thấy id để hiển thị");
         }
     }
 
     @PostMapping("add")
-    public ResponseEntity<?> add(@Valid @RequestBody NhanVienRequest nhanVienRequest,BindingResult bindingResult) {
+    public ResponseEntity<?> add(@Valid @RequestBody NhanVienRequest nhanVienRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
+            System.out.println(mess.toString());
             return ResponseEntity.badRequest().body(mess.toString());
         }
         if (nhanVienRequest.getMa() == null || nhanVienRequest.getMa().isEmpty()) {//nếu mã chưa đc điền thì tự động thêm mã
@@ -79,7 +80,7 @@ public class NhanVienController {
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@PathVariable String id,@Valid @RequestBody NhanVienRequest nhanVienRequest,BindingResult bindingResult) {
+    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody NhanVienRequest nhanVienRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
@@ -88,11 +89,15 @@ public class NhanVienController {
         if (nvRepo.existsByMaAndIdNot(nhanVienRequest.getMa(), id)) {
             return ResponseEntity.badRequest().body("Mã đã tồn tại tại nhân viên khác.");
         }
+
         if (nvRepo.findById(id).isPresent()) {
             NhanVien nhanVien = nvRepo.findById(id).get();
-            Quyen quyenAdmin = qRepo.findByTen("Admin");
-            if (!nhanVien.getQuyen().getId().equals(quyenAdmin.getId())) {
-                return ResponseEntity.badRequest().body("Bạn không có quyền sửa thông tin này");
+//            Quyen quyenAdmin = qRepo.findByTen("Admin");
+//            if (!nhanVien.getQuyen().getId().equals(quyenAdmin.getId())) {
+//                return ResponseEntity.badRequest().body("Bạn không có quyền sửa thông tin này");
+//            }
+            if (nhanVienRequest.getImg() == null || nhanVienRequest.getImg().isEmpty()) {
+                nhanVienRequest.setImg(nhanVien.getImg());
             }
             NhanVien nhanVienUpdate = nhanVienRequest.toEntity();
             nhanVienUpdate.setId(id);
@@ -108,11 +113,11 @@ public class NhanVienController {
     public ResponseEntity<?> delete(@PathVariable String id) {
         if (nvRepo.findById(id).isPresent()) {
             NhanVien nhanVien = nvRepo.findById(id).get();
-            Quyen quyenAdmin = qRepo.findByTen("Admin");
-
-            if (!nhanVien.getQuyen().getId().equals(quyenAdmin.getId())) {
-                return ResponseEntity.badRequest().body("Bạn không có quyền xóa thông tin này");
-            }
+//            Quyen quyenAdmin = qRepo.findByTen("Admin");
+//
+//            if (!nhanVien.getQuyen().getId().equals(quyenAdmin.getId())) {
+//                return ResponseEntity.badRequest().body("Bạn không có quyền xóa thông tin này");
+//            }
             nvRepo.deleteById(id);
             return ResponseEntity.ok("Xóa thành công");
         } else {
@@ -120,32 +125,20 @@ public class NhanVienController {
         }
     }
 
-    @GetMapping("search")
-    public ResponseEntity<?> searchByName(@RequestParam String ten) {
-        List<NhanVienResponse> list = new ArrayList<>();
-        nvRepo.findByTenContainingIgnoreCase(ten).forEach(nhanVien -> list.add(nhanVien.toResponse()));
-
-        if (list.isEmpty()) {
-            return ResponseEntity.badRequest().body("Không tìm thấy nhân viên với tên: " + ten);
-        }
-
-        return ResponseEntity.ok(list);
-    }
-
-    @GetMapping("loc")
-    public ResponseEntity<?> filterNhanVien(
+    @GetMapping("search-filter")
+    public ResponseEntity<?> searchAndFilterNhanVien(
+            @RequestParam String ten,
             @RequestParam(required = false) String gioiTinh,
             @RequestParam(required = false) String diaChi,
             @RequestParam(required = false) Integer trangThai) {
 
         List<NhanVienResponse> list = new ArrayList<>();
-        nvRepo.locNhanVien(gioiTinh, diaChi, trangThai)
+        nvRepo.timKiemVaLocNhanVien(ten, gioiTinh, diaChi, trangThai)
                 .forEach(nhanVien -> list.add(nhanVien.toResponse()));
 
         if (list.isEmpty()) {
-            return ResponseEntity.badRequest().body("Không tìm thấy nhân viên với các tiêu chí lọc");
+            return ResponseEntity.badRequest().body("Không tìm thấy nhân viên với tiêu chí tìm kiếm và lọc đã cho.");
         }
-
         return ResponseEntity.ok(list);
     }
 

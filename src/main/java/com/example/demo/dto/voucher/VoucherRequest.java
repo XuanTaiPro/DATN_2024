@@ -29,10 +29,10 @@ public class VoucherRequest {
     @NotBlank(message = "Giảm giáKhông được để trống")
     private String giamGia;
 
-    @NotBlank(message = "Ngày tạo Không được để trống")
+//    @NotBlank(message = "Ngày tạo Không được để trống")
     private String ngayTao;
 
-    @NotBlank(message = "Ngày sửa Không được để trống")
+//    @NotBlank(message = "Ngày sửa Không được để trống")
     private String ngaySua;
 
     @NotBlank(message = "giảm min Không được để trống")

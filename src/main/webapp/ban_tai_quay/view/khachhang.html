@@ -1,0 +1,202 @@
+<section class="p-3">
+    <h1>Quản lý khách hàng</h1>
+    <div class="row">
+        <div class="col-12">
+            <button class="btn btn-primary newUser" data-bs-toggle="modal" data-bs-target="#khForm">Create khách hàng <i
+                    class="bi bi-people"></i></button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" >
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>ID</th>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>PassWord</th>
+                    <th>Giới Tính</th>
+                    <th>SDT</th>
+                    <th>Địa Chỉ</th>
+                    <th>Trạng Thái</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+                <tbody id="data">
+                <tr ng-repeat="khachHang in listKhachHang">
+                    <td>{{$index+1}}</td>
+                    <td>{{ khachHang.id }}</td>
+                    <td>{{ khachHang.ma }}</td>
+                    <td>{{ khachHang.ten }}</td>
+                    <td>{{ khachHang.email }}</td>
+                    <td>{{ khachHang.passw }}</td>
+                    <td>{{ khachHang.gioiTinh }}</td>
+                    <td>{{ khachHang.sdt }}</td>
+                    <td>{{ khachHang.diaChi }}</td>
+                    <td>{{ khachHang.trangThai }}</td>
+                    <td>
+                        <button class="btn btn-success" data-bs-target="#readData" ng-click="openDetailModal(khachHang)"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-primary" ng-click="openUpdateModal(khachHang)"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-danger" ng-click="deleteKhachHang(khachHang.id)"><i class="bi bi-trash"></i></button>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!--add nhân viên-->
+
+<div class="modal fade" id="khForm" >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Fill the Form</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="myForm" ng-submit="addKhachHang()">
+                    <div class="inputField">
+                        <div>
+                            <label for="ten">Họ và tên:</label>
+                            <input type="text" ng-model="ten" id="ten" required>
+                        </div>
+                        <div>
+                            <label for="email">Email:</label>
+                            <input type="email" ng-model="email" id="email" required>
+                        </div>
+                        <div>
+                            <label for="passw">PassWord:</label>
+                            <input type="text" ng-model="passw"  id="passw" required>
+                        </div>
+                        <div>
+                            <label for="gioiTinh">Giới tính:</label>
+                            <input type="text" ng-model="gioiTinh"  id="gioiTinh" required>
+                        </div>
+                        <div>
+                            <label for="sdt">SDT :</label>
+                            <input type="text" ng-model="sdt" id="sdt" required>
+                        </div>
+                        <div>
+                            <label for="diaChi">Địa chỉ:</label>
+                            <input type="text" ng-model="diaChi" id="diaChi" minlength="11" maxlength="11" required>
+                        </div>
+                        <div>
+                            <label for="trangThai">Trạng thái:</label>
+                            <input type="text" ng-model="trangThai" id="trangThai" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="myForm" class="btn btn-primary submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- update nhân viên-->
+
+<div class="modal fade" id="updateForm" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Cập Nhật Khách Hàng</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="updateKhachHang" ng-submit="updateKhachHang()">
+                    <div class="inputField">
+                        <div>
+                            <label >Họ và tên:</label>
+                            <input type="text" ng-model="selectedKhachHang.ten" >
+                        </div>
+                        <div>
+                            <label >Email:</label>
+                            <input type="email" ng-model="selectedKhachHang.email" >
+                        </div>
+                        <div>
+                            <label >Mật khẩu:</label>
+                            <input type="text" ng-model="selectedKhachHang.passw" id="passwUpdate" >
+                        </div>
+                        <div>
+                            <label>Giới tính:</label>
+                            <input type="text" ng-model="selectedKhachHang.gioiTinh" id="gioiTinhUpdate" >
+                        </div>
+                        <div>
+                            <label >SDT :</label>
+                            <input type="text" ng-model="selectedKhachHang.sdt" id="sdtUpdate" required>
+                        </div>
+                        <div>
+                            <label>Địa chỉ:</label>
+                            <input type="text" ng-model="selectedKhachHang.diaChi" id="diaChiUpdate">
+                        </div>
+                        <div>
+                            <label >Trạng thái:</label>
+                            <input type="text" ng-model="selectedKhachHang.trangThai" id="trangThaiUpdate" >
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" form="updateKhachHang" class="btn btn-primary">Cập Nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detail khách hàng -->
+<div class="modal fade" id="readData">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Profile detail</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form action="#" id="myForm1">
+                    <div class="inputField">
+                        <div>
+                            <label>Họ và tên:</label>
+                            <input type="text" id="Showten" ng-model="selectedKhachHang.ten"  readonly>
+                        </div>
+                        <div>
+                            <label>Email:</label>
+                            <input type="email" id="Showemail" ng-model="selectedKhachHang.email"  readonly>
+                        </div>
+                        <div>
+                            <label>PassWord:</label>
+                            <input type="text" id="ShowpassWord" ng-model="selectedKhachHang.passw"  readonly>
+                        </div>
+                        <div>
+                            <label>Giới tính:</label>
+                            <input type="text" id="ShowgioiTinh" ng-model="selectedKhachHang.gioiTinh"  readonly>
+                        </div>
+                        <div>
+                            <label>SDT:</label>
+                            <input type="text" id="ShowSDT" ng-model="selectedKhachHang.sdt"  readonly>
+                        </div>
+                        <div>
+                            <label>Địa chỉ:</label>
+                            <input type="text" id="ShowdiaChi" ng-model="selectedKhachHang.diaChi" readonly>
+                        </div>
+                        <div>
+                            <label>Trạng thái:</label>
+                            <input type="text" id="ShowtrangThai" ng-model="selectedKhachHang.trangThai"   readonly>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

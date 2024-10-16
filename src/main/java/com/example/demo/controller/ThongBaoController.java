@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("thongbao")
 public class ThongBaoController {
@@ -60,6 +60,7 @@ public class ThongBaoController {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
+            System.out.println(mess.toString());
             return ResponseEntity.badRequest().body(mess.toString());
         }
         if (thongBaoRequest.getId() == null || thongBaoRequest.getId().isEmpty()) {

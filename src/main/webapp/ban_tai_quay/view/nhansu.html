@@ -1,0 +1,270 @@
+<section class="p-3">
+    <h1>Quản lý nhân viên</h1>
+    <div class="row">
+        <div class="col-12">
+            <button class="btn btn-primary newUser" data-bs-toggle="modal" data-bs-target="#userForm">New User <i
+                    class="bi bi-people"></i></button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>IMG</th>
+                    <th>ID</th>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Giới Tính</th>
+                    <th>Địa Chỉ</th>
+                    <th>Ngày Tạo</th>
+                    <th>Ngày sửa</th>
+                    <th>Quyền</th>
+                    <th>Trạng Thái</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+                <tbody id="data">
+                <tr ng-repeat="nhanVien in listNhanVien">
+                    <td>{{$index+1}}</td>
+                    <td><img ng-src="{{ nhanVien.img }}" alt="Ảnh nhân viên" width="50" height="50"></td>
+                    <td>{{ nhanVien.id }}</td>
+                    <td>{{ nhanVien.ma }}</td>
+                    <td>{{ nhanVien.ten }}</td>
+                    <td>{{ nhanVien.email }}</td>
+                    <td>{{ nhanVien.gioiTinh }}</td>
+                    <td>{{ nhanVien.diaChi }}</td>
+                    <td>{{ nhanVien.ngayTao }}</td>
+                    <td>{{ nhanVien.ngaySua }}</td>
+                    <td>{{ nhanVien.tenQuyen }}</td>
+                    <td>{{ nhanVien.trangThai }}</td>
+                    <td>
+                        <button class="btn btn-success" data-bs-target="#readData" ng-click="openDetailModal(nhanVien)"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-primary" ng-click="openUpdateModal(nhanVien)"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-danger" ng-click="deleteNhanVien(nhanVien.id)"><i class="bi bi-trash"></i></button>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!--add nhân viên-->
+
+<div class="modal fade" id="userForm" >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Fill the Form</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="myForm" ng-submit="addNhanVien()">
+                    <div class="card imgholder">
+                        <label for="imgInput" class="upload">
+                            <input type="file" id="imgInput" accept="image/*"
+                                   onchange="angular.element(this).scope().updateImage(this.files)">
+                            <i class="bi bi-plus-circle-dotted"></i>
+                        </label>
+                        <img ng-src="{{ img }}" alt="Ảnh nhân viên" width="200" height="200" class="img">
+                    </div>
+                    <div class="inputField">
+                        <div>
+                            <label for="ten">Họ và tên:</label>
+                            <input type="text" ng-model="ten" id="ten" required>
+                        </div>
+                        <div>
+                            <label for="email">Email:</label>
+                            <input type="email" ng-model="email" id="email" required>
+                        </div>
+                        <div>
+                            <label for="passw">PassWord:</label>
+                            <input type="text" ng-model="passw"  id="passw" required>
+                        </div>
+                        <div>
+                            <label for="gioiTinh">Giới tính:</label>
+                            <input type="text" ng-model="gioiTinh"  id="gioiTinh" required>
+                        </div>
+                        <div>
+                            <label >Tỉnh/Thành:</label>
+                            <select ng-model="selectedTinhThanh" ng-change="updateQuanHuyen()" ng-options="tinh for (tinh, quanHuyen) in locations" required>
+                                <option value="">Chọn Tỉnh/Thành</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label >Quận/Huyện:</label>
+                            <select ng-model="selectedQuanHuyen" ng-change="updatePhuongXa()" ng-options="quan for (quan, phuongXa) in locations[selectedTinhThanh]" ng-disabled="!selectedTinhThanh" required>
+                                <option value="">Chọn Quận/Huyện</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label >Phường/Xã:</label>
+                            <select ng-model="selectedPhuongXa" ng-options="xa for xa in locations[selectedTinhThanh][selectedQuanHuyen]" ng-disabled="!selectedQuanHuyen" required>
+                                <option value="">Chọn Phường/Xã</option>
+                            </select>
+                        </div>
+
+                        <!-- Địa chỉ hoàn chỉnh -->
+                        <div>
+                            <label >Địa chỉ:</label>
+                            <input type="text" ng-model="diaChi" value="{{selectedTinhThanh}}, {{selectedQuanHuyen}}, {{selectedPhuongXa}}" required>
+                        </div>
+
+
+                        <div>
+                            <label for="trangThai">Trạng thái:</label>
+                            <input type="text" ng-model="trangThai" id="trangThai" required>
+                        </div>
+                        <div>
+                            <label for="ngayTao">Ngày tạo :</label>
+                            <input type="date" ng-model="ngayTao" id="ngayTao" required>
+                        </div>
+                        <div>
+                            <label for="ngaySua">Ngày sửa :</label>
+                            <input type="date" ng-model="ngaySua" id="ngaySua" required>
+                        </div>
+                        <div>
+                            <label for="idQuyen">Quyền :</label>
+                            <input type="text" ng-model="idQuyen" id="idQuyen" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="myForm" class="btn btn-primary submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- update nhân viên-->
+
+<div class="modal fade" id="updateForm" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Cập Nhật Nhân Viên</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="updateNhanVien" ng-submit="updateNhanVien()">
+                    <div class="card imgholder">
+                        <label for="imgInputUpdate" class="upload">
+                            <input type="file" id="imgInputUpdate" accept="image/*"
+                                   onchange="angular.element(this).scope().updateImage(this.files)">
+                            <i class="bi bi-plus-circle-dotted"></i>
+                        </label>
+                        <img ng-src="{{ selectedNhanVien.img }}" alt="Ảnh nhân viên" width="200" height="200" class="img">
+                    </div>
+                    <div class="inputField">
+                        <div>
+                            <label >Họ và tên:</label>
+                            <input type="text" ng-model="selectedNhanVien.ten" required>
+                        </div>
+                        <div>
+                            <label >Email:</label>
+                            <input type="email" ng-model="selectedNhanVien.email" required>
+                        </div>
+                        <div>
+                            <label >Mật khẩu:</label>
+                            <input type="text" ng-model="selectedNhanVien.passw" id="passwUpdate" required>
+                        </div>
+                        <div>
+                            <label for="gioiTinhUpdate">Giới tính:</label>
+                            <input type="text" ng-model="selectedNhanVien.gioiTinh" id="gioiTinhUpdate" required>
+                        </div>
+                        <div>
+                            <label for="diaChiUpdate">Địa chỉ:</label>
+                            <input type="text" ng-model="selectedNhanVien.diaChi" id="diaChiUpdate" minlength="11" maxlength="11" required>
+                        </div>
+                        <div>
+                            <label for="trangThaiUpdate">Trạng thái:</label>
+                            <input type="text" ng-model="selectedNhanVien.trangThai" id="trangThaiUpdate" required>
+                        </div>
+                        <div>
+                            <label for="ngaySuaUpdate">Ngày sửa:</label>
+                            <input type="date" ng-model="selectedNhanVien.ngaySua" id="ngaySuaUpdate" required>
+                        </div>
+                        <div>
+                            <label for="idQuyenUpdate">Quyền:</label>
+                            <input type="text" ng-model="selectedNhanVien.idQuyen" id="idQuyenUpdate" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" form="updateNhanVien" class="btn btn-primary">Cập Nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Detail nhân viên -->
+<div class="modal fade" id="readData">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Profile detail</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form action="#" id="myForm1">
+                    <div class="card imgholder">
+                        <img ng-src="{{ img }}" alt="Ảnh nhân viên" width="200" height="200" class="showImg">
+                    </div>
+
+                    <div class="inputField">
+                        <div>
+                            <label>Họ và tên:</label>
+                            <input type="text" id="Showten" ng-model="selectedNhanVien.ten" required readonly>
+                        </div>
+                        <div>
+                            <label>Email:</label>
+                            <input type="email" id="Showemail" ng-model="selectedNhanVien.email" required readonly>
+                        </div>
+                        <div>
+                            <label>PassWord:</label>
+                            <input type="text" id="ShowpassWord" ng-model="selectedNhanVien.passw" required readonly>
+                        </div>
+                        <div>
+                            <label>Giới tính:</label>
+                            <input type="text" id="ShowgioiTinh" ng-model="selectedNhanVien.gioiTinh" required readonly>
+                        </div>
+                        <div>
+                            <label>Địa chỉ:</label>
+                            <input type="text" id="ShowdiaChi" ng-model="selectedNhanVien.diaChi" minlength="11" maxlength="11" required readonly>
+                        </div>
+                        <div>
+                            <label>Trạng thái:</label>
+                            <input type="text" id="ShowtrangThai" ng-model="selectedNhanVien.trangThai" required readonly>
+                        </div>
+                        <div>
+                            <label>Ngày tạo:</label>
+                            <input type="date" id="ShowngayTao" ng-model="selectedNhanVien.ngayTao" required readonly>
+                        </div>
+                        <div>
+                            <label>Ngày sửa:</label>
+                            <input type="date" id="ShowngaySua" ng-model="selectedNhanVien.ngaySua" required readonly>
+                        </div>
+                        <div>
+                            <label>Quyền:</label>
+                            <input type="text" id="Showquyen" ng-model="selectedNhanVien.idQuyen" required readonly>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("loaivoucher")
 public class LoaiVoucherController {
@@ -61,6 +62,7 @@ public class LoaiVoucherController {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
+            System.out.println(mess.toString());
             return ResponseEntity.badRequest().body(mess.toString());
         }
         if (loaiVoucherRequest.getId() == null || loaiVoucherRequest.getId().isEmpty()) {
@@ -103,12 +105,11 @@ public class LoaiVoucherController {
     @GetMapping("search")
     public ResponseEntity<?> searchLoaiVoucher(@RequestParam String ten) {
         List<LoaiVoucherResponse> list = new ArrayList<>();
-        lvcRepo.findByTenContainingIgnoreCaseAnd(ten).forEach(voucher -> list.add(voucher.toResponse()));
+        lvcRepo.findByTenContainingIgnoreCase(ten).forEach(voucher -> list.add(voucher.toResponse()));
 
         if (list.isEmpty()) {
             return ResponseEntity.badRequest().body("Không tìm thấy voucher với tên: " + ten);
         }
-
         return ResponseEntity.ok(list);
     }
 }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ThongBaoResponse {
+public class  ThongBaoResponse {
 
     private String id;
 

@@ -8,5 +8,5 @@ import java.util.List;
 public interface LoaiVoucherRepository extends JpaRepository<LoaiVoucher,String> {
     LoaiVoucher getById(String id);
     boolean existsByMa(String ma);
-    List<LoaiVoucher> findByTenContainingIgnoreCaseAnd(String ten);
+    List<LoaiVoucher> findByTenContainingIgnoreCase(String ten);
 }
