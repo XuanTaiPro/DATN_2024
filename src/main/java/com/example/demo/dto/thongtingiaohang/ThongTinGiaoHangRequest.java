@@ -28,13 +28,13 @@ public class ThongTinGiaoHangRequest {
     @NotBlank(message = "Địa chỉ người nhận Không được để trống")
     private String dcNguoiNhan;
 
-    @NotBlank(message = "Ngày tạo Không được để trống")
+//    @NotBlank(message = "Ngày tạo Không được để trống")
     private String ngayTao;
 
-    @NotBlank(message = "Ngày sửa Không được để trống")
+//    @NotBlank(message = "Ngày sửa Không được để trống")
     private String ngaySua;
 
-    @NotNull(message = "idKH Không được để trống")
+    @NotNull(message = "trạng thái Không được để trống")
     private Integer trangThai;
 
     @NotNull(message = "idKH Không được để trống")

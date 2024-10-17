@@ -38,6 +38,10 @@ app.config(function ($routeProvider) {
             templateUrl: 'view/thongbao.html',
             controller: thongbaoCtrl
         })
+        .when('/thongtingiaohang', {
+            templateUrl: 'view/thongtingiaohang.html',
+            controller: thongtingiaohangCtrl
+        })
         .otherwise({
             redirectTo: '/sanpham',
         })
