@@ -58,7 +58,6 @@ window.loaivoucherCtrl = function ($scope, $http) {
         $http.put(url + '/update/' + $scope.selectedLoaiVoucher.id, $scope.selectedLoaiVoucher)
             .then(function (response) {
                 console.log("Cập nhật thành công", response.data);
-                // Cập nhật danh sách nhân viên sau khi update thành công
                 const index = $scope.listLoaiVoucher.findIndex(lvc => lvc.id === response.data.id);
                 if (index !== -1) {
                     $scope.listLoaiVoucher[index] = response.data;
@@ -66,9 +65,7 @@ window.loaivoucherCtrl = function ($scope, $http) {
                 alert('Cập nhật thành công!!');
                 resetUpdateForm();
             })
-            .catch(function (error) {
-                console.error("Lỗi khi cập nhật nhân viên:", error);
-                alert("Cập nhật thất bại. Vui lòng thử lại sau.");
+            .catch(function () {
             });
         var modalElement = new bootstrap.Modal(document.getElementById('updateForm'));
         modalElement.hide();

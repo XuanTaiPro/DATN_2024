@@ -2,10 +2,13 @@ package com.example.demo.entity;
 
 
 import com.example.demo.dto.voucher.VoucherResponse;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
@@ -27,10 +30,10 @@ public class Voucher {
     private String giamGia;
 
     @Column(name = "NGAYTAO")
-    private String ngayTao;
+    private LocalDateTime ngayTao;
 
     @Column(name = "NGAYSUA")
-    private String ngaySua;
+    private LocalDateTime ngaySua;
 
     @Column(name = "GIAMMIN")
     private String giamMin;
@@ -52,9 +55,10 @@ public class Voucher {
 
     @ManyToOne
     @JoinColumn(name = "IDLOAIVC")
+    @JsonIgnore
     private LoaiVoucher loaiVoucher;
 
     public VoucherResponse toResponse() {
-        return new VoucherResponse(id, ma, ten, giamGia, ngayTao, ngaySua, giamMin, giamMax, dieuKien,ngayKetThuc,soLuong,trangThai, loaiVoucher.getMa(), loaiVoucher.getTen());
+        return new VoucherResponse(id, ma, ten, giamGia, ngayTao, ngaySua, giamMin, giamMax, dieuKien, ngayKetThuc, soLuong, trangThai, loaiVoucher.getTen());
     }
 }

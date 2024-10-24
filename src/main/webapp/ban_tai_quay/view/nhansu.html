@@ -2,8 +2,9 @@
     <h1>Quản lý nhân viên</h1>
     <div class="row">
         <div class="col-12">
-            <button class="btn btn-primary newUser" data-bs-toggle="modal" data-bs-target="#userForm">New User <i
-                    class="bi bi-people"></i></button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal">
+                Thêm Nhân Viên
+            </button>
         </div>
     </div>
 
@@ -20,8 +21,6 @@
                     <th>Email</th>
                     <th>Giới Tính</th>
                     <th>Địa Chỉ</th>
-                    <th>Ngày Tạo</th>
-                    <th>Ngày sửa</th>
                     <th>Quyền</th>
                     <th>Trạng Thái</th>
                     <th>Thao tác</th>
@@ -37,13 +36,13 @@
                     <td>{{ nhanVien.email }}</td>
                     <td>{{ nhanVien.gioiTinh }}</td>
                     <td>{{ nhanVien.diaChi }}</td>
-                    <td>{{ nhanVien.ngayTao }}</td>
-                    <td>{{ nhanVien.ngaySua }}</td>
                     <td>{{ nhanVien.tenQuyen }}</td>
-                    <td>{{ nhanVien.trangThai }}</td>
                     <td>
-                        <button class="btn btn-success" data-bs-target="#readData" ng-click="openDetailModal(nhanVien)"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-primary" ng-click="openUpdateModal(nhanVien)"><i class="bi bi-pencil-square"></i></button>
+                        {{ nhanVien.trangThai == 1 ? 'Hoạt động' : 'Ngưng hoạt động' }}
+                    </td>
+                    <td>
+                        <button class="btn btn-success" ng-click="viewDetail(nhanVien)" data-bs-toggle="modal" data-bs-target="#DetailForm"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-primary" ng-click="openUpdateModal(nhanVien)"  data-bs-toggle="modal" data-bs-target="#UpdateForm"><i class="bi bi-pencil-square"></i></button>
                         <button class="btn btn-danger" ng-click="deleteNhanVien(nhanVien.id)"><i class="bi bi-trash"></i></button>
 
                     </td>
@@ -56,15 +55,16 @@
 
 <!--add nhân viên-->
 
-<div class="modal fade" id="userForm" >
+
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Fill the Form</h4>
+                <h5 class="modal-title" id="productModalLabel">Thêm Nhân Viên</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="#" id="myForm" ng-submit="addNhanVien()">
+                <form action="#!/nhansu" id="addNhanVien" ng-submit="addNhanVien()">
                     <div class="card imgholder">
                         <label for="imgInput" class="upload">
                             <input type="file" id="imgInput" accept="image/*"
@@ -88,74 +88,54 @@
                         </div>
                         <div>
                             <label for="gioiTinh">Giới tính:</label>
-                            <input type="text" ng-model="gioiTinh"  id="gioiTinh" required>
-                        </div>
-                        <div>
-                            <label >Tỉnh/Thành:</label>
-                            <select ng-model="selectedTinhThanh" ng-change="updateQuanHuyen()" ng-options="tinh for (tinh, quanHuyen) in locations" required>
-                                <option value="">Chọn Tỉnh/Thành</option>
+                            <select ng-model="gioiTinh" id="gioiTinh" class="short-select" required>
+                                <option value="" disabled selected>Chọn Giới Tính</option>
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
                             </select>
                         </div>
-
-                        <div>
-                            <label >Quận/Huyện:</label>
-                            <select ng-model="selectedQuanHuyen" ng-change="updatePhuongXa()" ng-options="quan for (quan, phuongXa) in locations[selectedTinhThanh]" ng-disabled="!selectedTinhThanh" required>
-                                <option value="">Chọn Quận/Huyện</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label >Phường/Xã:</label>
-                            <select ng-model="selectedPhuongXa" ng-options="xa for xa in locations[selectedTinhThanh][selectedQuanHuyen]" ng-disabled="!selectedQuanHuyen" required>
-                                <option value="">Chọn Phường/Xã</option>
-                            </select>
-                        </div>
-
-                        <!-- Địa chỉ hoàn chỉnh -->
                         <div>
                             <label >Địa chỉ:</label>
-                            <input type="text" ng-model="diaChi" value="{{selectedTinhThanh}}, {{selectedQuanHuyen}}, {{selectedPhuongXa}}" required>
+                            <input type="text" ng-model="diaChi">
                         </div>
-
-
                         <div>
                             <label for="trangThai">Trạng thái:</label>
-                            <input type="text" ng-model="trangThai" id="trangThai" required>
+                            <select ng-model="trangThai" id="trangThai" class="short-select" required>
+                                <option value="" disabled selected>Chọn Trạng Thái</option>
+                                <option value="1">Hoạt động</option>
+                                <option value="0">Ngưng hoạt động</option>
+                            </select>
                         </div>
+
                         <div>
-                            <label for="ngayTao">Ngày tạo :</label>
-                            <input type="date" ng-model="ngayTao" id="ngayTao" required>
-                        </div>
-                        <div>
-                            <label for="ngaySua">Ngày sửa :</label>
-                            <input type="date" ng-model="ngaySua" id="ngaySua" required>
-                        </div>
-                        <div>
-                            <label for="idQuyen">Quyền :</label>
-                            <input type="text" ng-model="idQuyen" id="idQuyen" required>
+                            <label>Quyền:</label>
+                            <select ng-model="idQuyen" class="short-select" required>
+                                <option value="" disabled selected>Chọn quyền</option>
+                                <option ng-repeat="quyen in listQuyen" value="{{quyen.id}}">{{quyen.ten}}</option>
+                            </select>
                         </div>
                     </div>
                 </form>
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="myForm" class="btn btn-primary submit">Submit</button>
+                <button type="submit" form="addNhanVien" class="btn btn-primary submit">Submit</button>
             </div>
         </div>
     </div>
 </div>
-<!-- update nhân viên-->
 
-<div class="modal fade" id="updateForm" tabindex="-1">
+<!-- update nhân viên-->
+<div class="modal fade" id="UpdateForm" tabindex="-1" aria-labelledby="userFormLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Cập Nhật Nhân Viên</h4>
+                <h5 class="modal-title">Cập Nhật Nhân Viên</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="#" id="updateNhanVien" ng-submit="updateNhanVien()">
+                <form action="#!/nhansu" id="updateNhanVien" ng-submit="updateNhanVien()">
+                    <!-- Hình ảnh nhân viên -->
                     <div class="card imgholder">
                         <label for="imgInputUpdate" class="upload">
                             <input type="file" id="imgInputUpdate" accept="image/*"
@@ -166,36 +146,44 @@
                     </div>
                     <div class="inputField">
                         <div>
-                            <label >Họ và tên:</label>
+                            <label>Họ và tên:</label>
                             <input type="text" ng-model="selectedNhanVien.ten" required>
                         </div>
                         <div>
-                            <label >Email:</label>
+                            <label>Email:</label>
                             <input type="email" ng-model="selectedNhanVien.email" required>
                         </div>
                         <div>
-                            <label >Mật khẩu:</label>
+                            <label>Mật khẩu:</label>
                             <input type="text" ng-model="selectedNhanVien.passw" id="passwUpdate" required>
                         </div>
                         <div>
                             <label for="gioiTinhUpdate">Giới tính:</label>
-                            <input type="text" ng-model="selectedNhanVien.gioiTinh" id="gioiTinhUpdate" required>
+                            <select ng-model="selectedNhanVien.gioiTinh" id="gioiTinhUpdate" class="short-select" required>
+                                <option value="" disabled selected>Chọn Giới Tính</option>
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            </select>
                         </div>
+
                         <div>
                             <label for="diaChiUpdate">Địa chỉ:</label>
-                            <input type="text" ng-model="selectedNhanVien.diaChi" id="diaChiUpdate" minlength="11" maxlength="11" required>
+                            <input type="text" ng-model="selectedNhanVien.diaChi" id="diaChiUpdate" required>
                         </div>
                         <div>
                             <label for="trangThaiUpdate">Trạng thái:</label>
-                            <input type="text" ng-model="selectedNhanVien.trangThai" id="trangThaiUpdate" required>
+                            <select ng-model="selectedNhanVien.trangThai" id="trangThaiUpdate" class="short-select" required>
+                                <option value="" disabled>Chọn Trạng Thái</option>
+                                <option value="1">Hoạt động</option>
+                                <option value="0">Ngưng hoạt động</option>
+                            </select>
                         </div>
                         <div>
-                            <label for="ngaySuaUpdate">Ngày sửa:</label>
-                            <input type="date" ng-model="selectedNhanVien.ngaySua" id="ngaySuaUpdate" required>
-                        </div>
-                        <div>
-                            <label for="idQuyenUpdate">Quyền:</label>
-                            <input type="text" ng-model="selectedNhanVien.idQuyen" id="idQuyenUpdate" required>
+                            <label>Quyền:</label>
+                            <select ng-model="idQuyen" class="short-select" required >
+                                <option value="" disabled selected>Chọn quyền</option>
+                                <option ng-repeat="quyen in listQuyen" value="{{quyen.id}}">{{quyen.ten}}</option>
+                            </select>
                         </div>
                     </div>
                 </form>
@@ -208,58 +196,49 @@
         </div>
     </div>
 </div>
+
+
 <!-- Detail nhân viên -->
-<div class="modal fade" id="readData">
+<div class="modal fade" id="DetailForm" tabindex="-1" aria-labelledby="userFormLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-
             <div class="modal-header">
-                <h4 class="modal-title">Profile detail</h4>
+                <h5 class="modal-title">Thông Tin Nhân Viên</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body">
-                <form action="#" id="myForm1">
+                <form  id="myForm1">
                     <div class="card imgholder">
-                        <img ng-src="{{ img }}" alt="Ảnh nhân viên" width="200" height="200" class="showImg">
+                        <img ng-src="{{ selectedNhanVien.img }}" alt="Ảnh nhân viên" width="200" height="200" class="showImg">
                     </div>
-
                     <div class="inputField">
                         <div>
                             <label>Họ và tên:</label>
-                            <input type="text" id="Showten" ng-model="selectedNhanVien.ten" required readonly>
+                            <input type="text" ng-model="selectedNhanVien.ten" required readonly>
                         </div>
                         <div>
                             <label>Email:</label>
-                            <input type="email" id="Showemail" ng-model="selectedNhanVien.email" required readonly>
+                            <input type="email" ng-model="selectedNhanVien.email" required readonly>
                         </div>
                         <div>
                             <label>PassWord:</label>
-                            <input type="text" id="ShowpassWord" ng-model="selectedNhanVien.passw" required readonly>
+                            <input type="text" ng-model="selectedNhanVien.passw" required readonly>
                         </div>
                         <div>
                             <label>Giới tính:</label>
-                            <input type="text" id="ShowgioiTinh" ng-model="selectedNhanVien.gioiTinh" required readonly>
+                            <input type="text" ng-model="selectedNhanVien.gioiTinh" required readonly>
                         </div>
                         <div>
                             <label>Địa chỉ:</label>
-                            <input type="text" id="ShowdiaChi" ng-model="selectedNhanVien.diaChi" minlength="11" maxlength="11" required readonly>
+                            <input type="text" ng-model="selectedNhanVien.diaChi" required readonly>
                         </div>
                         <div>
                             <label>Trạng thái:</label>
-                            <input type="text" id="ShowtrangThai" ng-model="selectedNhanVien.trangThai" required readonly>
-                        </div>
-                        <div>
-                            <label>Ngày tạo:</label>
-                            <input type="date" id="ShowngayTao" ng-model="selectedNhanVien.ngayTao" required readonly>
-                        </div>
-                        <div>
-                            <label>Ngày sửa:</label>
-                            <input type="date" id="ShowngaySua" ng-model="selectedNhanVien.ngaySua" required readonly>
+                            <input type="text" ng-model="selectedNhanVien.trangThai" required readonly>
                         </div>
                         <div>
                             <label>Quyền:</label>
-                            <input type="text" id="Showquyen" ng-model="selectedNhanVien.idQuyen" required readonly>
+                            <input type="text" ng-model="selectedNhanVien.tenQuyen" required readonly>
                         </div>
                     </div>
                 </form>
@@ -267,4 +246,33 @@
         </div>
     </div>
 </div>
-</div>
+
+
+
+<style>
+    /* Style cho phần select */
+    select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        font-size: 16px;
+        color: #333;
+        cursor: pointer;
+    }
+
+    select:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    select option {
+        padding: 10px;
+    }
+
+    .short-select {
+        width: 375px;
+    }
+</style>

@@ -42,9 +42,9 @@ app.config(function ($routeProvider) {
             templateUrl: 'view/thongtingiaohang.html',
             controller: thongtingiaohangCtrl
         })
-        .otherwise({
-            redirectTo: '/sanpham',
-        })
+        // .otherwise({
+        //     redirectTo: '/sanpham',
+        // })
 })
 
 app.controller('myCtrl', function ($scope, $http) { })

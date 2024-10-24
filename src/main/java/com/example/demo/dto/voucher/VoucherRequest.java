@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -30,10 +31,10 @@ public class VoucherRequest {
     private String giamGia;
 
 //    @NotBlank(message = "Ngày tạo Không được để trống")
-    private String ngayTao;
+    private LocalDateTime ngayTao;
 
 //    @NotBlank(message = "Ngày sửa Không được để trống")
-    private String ngaySua;
+    private LocalDateTime ngaySua;
 
     @NotBlank(message = "giảm min Không được để trống")
     private String giamMin;
@@ -44,7 +45,7 @@ public class VoucherRequest {
     @NotBlank(message = "điều kiện Không được để trống")
     private String dieuKien;
 
-    @NotBlank(message = "ngày kết thúc Không được để trống")
+//    @NotBlank(message = "ngày kết thúc Không được để trống")
     private String ngayKetThuc;
 
     @NotNull(message = "Số lượng Không được để trống")

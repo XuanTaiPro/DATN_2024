@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -29,11 +30,11 @@ public class ThongBaoRequest {
     @Size(max = 100, message = "Mã khách hàng không được dài quá 100 ký tự")
     private String noiDung;
 
-    @NotBlank(message = "Ngày gửi Không được để trống")
-    private String ngayGui;
+//    @NotBlank(message = "Ngày gửi Không được để trống")
+    private LocalDateTime ngayGui;
 
-    @NotBlank(message = "ngày đọc Không được để trống")
-    private String ngayDoc;
+//    @NotBlank(message = "ngày đọc Không được để trống")
+    private LocalDateTime ngayDoc;
 
     @NotNull(message = "Trạng thái Không được để trống")
     private Integer trangThai;

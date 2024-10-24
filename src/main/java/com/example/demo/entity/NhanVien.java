@@ -1,10 +1,14 @@
 package com.example.demo.entity;
 
 import com.example.demo.dto.nhanvien.NhanVienResponse;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
@@ -42,16 +46,17 @@ public class NhanVien {
     private Integer trangThai;
 
     @Column(name = "NGAYTAO")
-    private String ngayTao;
+    private LocalDateTime ngayTao;
 
     @Column(name = "NGAYSUA")
-    private String ngaySua;
+    private LocalDateTime ngaySua;
 
     @OneToOne
     @JoinColumn(name = "IDQUYEN")
+    @JsonIgnore
     private Quyen quyen;
 
     public NhanVienResponse toResponse() {
-        return new NhanVienResponse(id, ma, ten, email, passw, gioiTinh, img, diaChi, trangThai, ngayTao, ngaySua, quyen.getTen(), quyen.getTrangThai());
+        return new NhanVienResponse(id, ma, ten, email, passw, gioiTinh, img, diaChi, trangThai, quyen.getTen());
     }
 }

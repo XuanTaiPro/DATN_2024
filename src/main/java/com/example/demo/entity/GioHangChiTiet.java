@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import com.example.demo.dto.giohangchitiet.GioHangChiTietResponse;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,6 +36,7 @@ public class GioHangChiTiet {
 
     @ManyToOne
     @JoinColumn(name = "IDSPCT")
+    @JsonIgnore
     private ChiTietSanPham chiTietSanPham;
 
     public GioHangChiTietResponse toResponse() {

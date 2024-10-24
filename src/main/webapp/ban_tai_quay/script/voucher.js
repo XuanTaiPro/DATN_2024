@@ -10,35 +10,34 @@ window.voucherCtrl = function ($scope, $http) {
         console.error('Lỗi:', error);
     });
 
-    // Mở modal
-    $scope.openModal = function () {
-        var modalElement = new bootstrap.Modal(document.getElementById('vcForm'), {
-            keyboard: false
+    $scope.listLVC = [];
+    $http.get("http://localhost:8080/loaivoucher")
+        .then(function(response) {
+            $scope.listLVC = response.data;
+            console.log("Lấy danh sách LVC thành công", $scope.listLVC);
+        })
+        .catch(function(error) {
+            console.error("Lỗi khi lấy danh sách LVC:", error);
         });
-        modalElement.show();
-    };
-    $scope.openDetailModal = function (voucher) {
+
+
+    $scope.viewDetail = function (voucher) {
         $scope.selectedVoucher = angular.copy(voucher);
-        var modalElement = new bootstrap.Modal(document.getElementById('readData'), {
-            keyboard: false
-        });
-        modalElement.show(); // Hiển thị modal
-    };
-    $scope.openUpdateModal = function (voucher) {
+    }
+    $scope.openUpdateModal = function(voucher) {
         $scope.selectedVoucher = angular.copy(voucher);
-        // Chuyển đổi chuỗi ngày sang đối tượng Date
-        if ($scope.selectedVoucher.ngayKetThuc) {
-            $scope.selectedVoucher.ngayKetThuc = new Date($scope.selectedVoucher.ngayKetThuc);
-        }
-        var modalElement = new bootstrap.Modal(document.getElementById('updateForm'), {
-            keyboard: false
-        });
-        modalElement.show();
+        $scope.selectedLoaiVoucher = $scope.selectedVoucher.tenQuyen
+        $scope.idLoaiVC = null
+        console.log( $scope.selectedLoaiVoucher)
+        fetch('http://localhost:8080/loaivoucher/getId?ten=' +$scope.selectedLoaiVoucher).then(function (response){
+            $scope.idLoaiVC = response
+        }).catch(function (er){
+            console.error()
+        })
     };
 
 
-    $scope.addVoucher = function () {
-        console.log("Thêm Khách hàng được gọi!");
+    $scope.addVoucher = function (e) {
         const newVoucher = {
             ten: $scope.ten,
             giamGia: $scope.giamGia,
@@ -50,64 +49,65 @@ window.voucherCtrl = function ($scope, $http) {
             idLoaiVC: $scope.idLoaiVC,
             trangThai: $scope.trangThai
         };
-        console.log("Dữ liệu voucher mới:", newVoucher);
 
-        $http.post(url + '/add', newVoucher)
+        console.log("Dữ liệu mới:", newVoucher);
+        $http.post('http://localhost:8080/voucher/add', newVoucher)
             .then(function (response) {
+                $('#productModal').modal('hide');
                 $scope.listVoucher.push(response.data);
                 alert('Thêm thành công!!')
+                e.preventDefault()
                 resetForm();
             }).catch((error) => {
             $scope.errorMessage = "Thêm thất bại";
         });
-        // Reset form
         resetForm();
-        var modalElement = new bootstrap.Modal(document.getElementById('vcForm'));
-        modalElement.hide();
-
     };
-    $scope.updateVoucher = function () {
-        console.log("Cập nhật voucher:", $scope.selectedVoucher);  // Kiểm tra dữ liệu trước khi gửi
-        $http.put(url + '/update/' + $scope.selectedVoucher.id, $scope.selectedVoucher)
+
+    $scope.updateNhanVien = function () {
+        if (!$scope.idLoaiVC) {
+            alert("Vui lòng chọn quyền cho nhân viên.");
+            return;
+        }
+        $scope.selectedVoucher.idLoaiVC = $scope.idLoaiVC;
+        $http.put('http://localhost:8080/voucher/update/' + $scope.selectedVoucher.id, $scope.selectedVoucher)
             .then(function (response) {
+                $('#UpdateForm').modal('hide');
                 console.log("Cập nhật thành công", response.data);
-                // Cập nhật danh sách nhân viên sau khi update thành công
-                const index = $scope.listVoucher.findIndex(vc => vc.id === response.data.id);
+                // Xóa nhân viên khỏi danh sách
+                const index = $scope.listVoucher.findIndex(vc => vc.id === id);
                 if (index !== -1) {
-                    $scope.listVoucher[index] = response.data;
+                    $scope.listVoucher.splice(index, 1);
                 }
-                alert('Cập nhật thành công!!');
-                resetUpdateForm();
+                alert('Sửa thành công!!');
+                resetForm()
             })
-            .catch(function (error) {
-                console.error("Lỗi khi cập nhật nhân viên:", error);
-                alert("Cập nhật thất bại. Vui lòng thử lại sau.");
+            .catch(function () {
             });
-        var modalElement = new bootstrap.Modal(document.getElementById('updateForm'));
-        modalElement.hide();
     };
 
 
 
-// Xóa nhân viên
     $scope.deleteVoucher = function (id) {
         console.log("Xóa");
-        if (confirm('Bạn có chắc chắn muốn xóa voucher này?')) {
-            $http.delete(url + '/delete/' + id)
+        if (confirm('Bạn có chắc chắn muốn xóa ?')) {
+            $http.delete('http://localhost:8080/voucher/delete/' + id)
                 .then(function (response) {
-                    // Tìm chỉ số của nhân viên đã xóa
+                    // Kiểm tra phản hồi server
+                    console.log(response.data);
                     const index = $scope.listVoucher.findIndex(vc => vc.id === id);
                     if (index !== -1) {
-                        $scope.listVoucher.splice(index, 1);  // Xóa nhân viên khỏi danh sách
+                        $scope.listVoucher.splice(index, 1);
                     }
-                    alert('Xóa thành công!!');
+                    alert(response.data.message || 'Xóa thành công!!');  // Sử dụng thông điệp từ server
                 })
                 .catch(function (error) {
-                    console.error("Lỗi khi xóa nhân viên:", error);
-                    alert("Xóa thất bại. Vui lòng thử lại sau.");  // Hiển thị thông báo lỗi
+                    console.error("Lỗi khi xóa :", error);
+                    alert("Xóa thất bại. Vui lòng thử lại sau.");
                 });
         }
     };
+
 
 
     // Reset form

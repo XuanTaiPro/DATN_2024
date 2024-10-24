@@ -40,6 +40,11 @@ public class LoaiVoucherController {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("getId")
+    public String findLoaiVCByTen(@RequestParam String ten) {
+        return lvcRepo.getLoaiVoucherByTen(ten).getId();
+    }
+
     @GetMapping("page")
     public ResponseEntity<?> page(@RequestParam(defaultValue = "0") Integer page) {
         Pageable p = PageRequest.of(page, 10);
@@ -52,7 +57,7 @@ public class LoaiVoucherController {
     public ResponseEntity<?> detail(@PathVariable String id) {
         if (lvcRepo.findById(id).isPresent()) {
             return ResponseEntity.ok().body(lvcRepo.findById(id).stream().map(LoaiVoucher::toResponse));
-        }else {
+        } else {
             return ResponseEntity.badRequest().body("Không tìm thấy id để hiển thị");
         }
     }
@@ -77,7 +82,7 @@ public class LoaiVoucherController {
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@PathVariable String id,@Valid @RequestBody LoaiVoucherRequest  loaiVoucherRequest,BindingResult bindingResult) {
+    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody LoaiVoucherRequest loaiVoucherRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder mess = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
@@ -102,6 +107,7 @@ public class LoaiVoucherController {
             return ResponseEntity.badRequest().body("Không tìm thấy id cần xóa");
         }
     }
+
     @GetMapping("search")
     public ResponseEntity<?> searchLoaiVoucher(@RequestParam String ten) {
         List<LoaiVoucherResponse> list = new ArrayList<>();

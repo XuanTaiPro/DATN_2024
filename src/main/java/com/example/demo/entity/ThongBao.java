@@ -1,10 +1,13 @@
 package com.example.demo.entity;
 
 import com.example.demo.dto.thongbao.ThongBaoResponse;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
@@ -24,16 +27,17 @@ public class ThongBao {
     private String noiDung;
 
     @Column(name = "NGAYGUI")
-    private String ngayGui;
+    private LocalDateTime ngayGui;
 
     @Column(name = "NGAYDOC")
-    private String ngayDoc;
+    private LocalDateTime ngayDoc;
 
     @Column(name = "TRANGTHAI")
     private Integer trangThai;
 
     @ManyToOne
     @JoinColumn(name = "IDKH")
+    @JsonIgnore
     private KhachHang khachHang;
 
     public ThongBaoResponse toResponse() {

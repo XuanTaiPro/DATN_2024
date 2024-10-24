@@ -2,12 +2,13 @@
     <h1>Quản lý voucher</h1>
     <div class="row">
         <div class="col-12">
-            <button class="btn btn-primary newUser" data-bs-toggle="modal" data-bs-target="#vcForm">Create voucher<i
-                    class="bi bi-people"></i></button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal">
+                Thêm Voucher
+            </button>
         </div>
     </div>
     <div class="row">
-        <div class="col-12" >
+        <div class="col-12">
             <table class="table table-hover">
                 <thead>
                 <tr>
@@ -41,9 +42,12 @@
                     <td>{{ voucher.tenLoaiVC }}</td>
                     <td>{{ voucher.trangThai }}</td>
                     <td>
-                        <button class="btn btn-success" data-bs-target="#readData" ng-click="openDetailModal(voucher)"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-primary" ng-click="openUpdateModal(voucher)"><i class="bi bi-pencil-square"></i></button>
-                        <button class="btn btn-danger" ng-click="deleteVoucher(voucher.id)"><i class="bi bi-trash"></i></button>
+                        <button class="btn btn-success" ng-click="viewDetail(voucher)" data-bs-toggle="modal"
+                                data-bs-target="#DetailForm"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-primary" ng-click="openUpdateModal(voucher)" data-bs-toggle="modal"
+                                data-bs-target="#UpdateForm"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-danger" ng-click="deleteVoucher(voucher.id)"><i class="bi bi-trash"></i>
+                        </button>
 
                     </td>
                 </tr>
@@ -55,47 +59,50 @@
 
 <!--add nhân viên-->
 
-<div class="modal fade" id="vcForm" >
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Fill the Form</h4>
+                <h5 class="modal-title" id="productModalLabel">Thêm Voucher</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="#" id="myForm" ng-submit="addVoucher()">
                     <div class="inputField">
                         <div>
-                            <label >Tên Voucher:</label>
-                            <input type="text" ng-model="ten" id="ten" >
+                            <label>Tên Voucher:</label>
+                            <input type="text" ng-model="ten" id="ten">
                         </div>
                         <div>
-                            <label >Giá giảm:</label>
-                            <input type="text" ng-model="giamGia"  >
+                            <label>Giá giảm:</label>
+                            <input type="text" ng-model="giamGia">
                         </div>
                         <div>
-                            <label >Giảm min:</label>
-                            <input type="text" ng-model="giamMin"  >
+                            <label>Giảm min:</label>
+                            <input type="text" ng-model="giamMin">
                         </div>
                         <div>
-                            <label >Giảm max:</label>
-                            <input type="text" ng-model="giamMax"  >
+                            <label>Giảm max:</label>
+                            <input type="text" ng-model="giamMax">
                         </div>
                         <div>
                             <label>Điều kiện :</label>
-                            <input type="text" ng-model="dieuKien"  >
+                            <input type="text" ng-model="dieuKien">
                         </div>
                         <div>
-                            <label >Ngày kết thúc:</label>
-                            <input type="date" ng-model="ngayKetThuc"   >
+                            <label>Ngày kết thúc:</label>
+                            <input type="date" ng-model="ngayKetThuc">
                         </div>
                         <div>
                             <label>Số lượng:</label>
-                            <input type="number" ng-model="soLuong" >
+                            <input type="number" ng-model="soLuong">
                         </div>
                         <div>
-                            <label >ID loại voucher:</label>
-                            <input type="text" ng-model="idLoaiVC" >
+                            <label>Loại voucher:</label>
+                            <select ng-model="idLoaiVC" required>
+                                <option value="" disabled selected>Chọn Loại Voucher</option>
+                                <option ng-repeat="lvc in listLVC" value="{{lvc.id}}">{{lvc.ten}}</option>
+                            </select>
                         </div>
                         <div>
                             <label for="trangThai">Trạng thái:</label>
@@ -104,7 +111,6 @@
                     </div>
                 </form>
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="myForm" class="btn btn-primary submit">Submit</button>
@@ -114,50 +120,53 @@
 </div>
 
 
-<div class="modal fade" id="updateForm" tabindex="-1">
+<div class="modal fade" id="UpdateForm" tabindex="-1" aria-labelledby="userFormLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Cập Nhật Voucher</h4>
+                <h5 class="modal-title">Cập Nhật Voucher</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="#" id="updateVoucher" ng-submit="updateVoucher()">
                     <div class="inputField">
                         <div>
-                            <label >Tên Voucher:</label>
-                            <input type="text" ng-model="selectedVoucher.ten" >
+                            <label>Tên Voucher:</label>
+                            <input type="text" ng-model="selectedVoucher.ten">
                         </div>
                         <div>
-                            <label >Giá giảm:</label>
-                            <input type="text" ng-model="selectedVoucher.giamGia" >
+                            <label>Giá giảm:</label>
+                            <input type="text" ng-model="selectedVoucher.giamGia">
                         </div>
                         <div>
-                            <label >Giảm min:</label>
-                            <input type="text" ng-model="selectedVoucher.giamGia"  >
+                            <label>Giảm min:</label>
+                            <input type="text" ng-model="selectedVoucher.giamGia">
                         </div>
                         <div>
                             <label>Giảm max:</label>
-                            <input type="text" ng-model="selectedVoucher.giamMax"  >
+                            <input type="text" ng-model="selectedVoucher.giamMax">
                         </div>
                         <div>
-                            <label >Điều kiện :</label>
-                            <input type="text" ng-model="selectedVoucher.dieuKien" >
+                            <label>Điều kiện :</label>
+                            <input type="text" ng-model="selectedVoucher.dieuKien">
                         </div>
-                        <div>
-                            <label>Ngày kết thúc:</label>
-                            <input type="date" ng-model="selectedVoucher.ngayKetThuc" >
-                        </div>
+<!--                        <div>-->
+<!--                            <label>Ngày kết thúc:</label>-->
+<!--                            <input type="date" ng-model="selectedVoucher.ngayKetThuc">-->
+<!--                        </div>-->
                         <div>
                             <label>Số lượng:</label>
-                            <input type="number" ng-model="selectedVoucher.soLuong" >
+                            <input type="number" ng-model="selectedVoucher.soLuong">
                         </div>
                         <div>
-                            <label>ID Loại Vocher:</label>
-                            <input type="text" ng-model="selectedVoucher.idLoaiVC" >
+                            <label>Loại voucher:</label>
+                            <select ng-model="idLoaiVC" required>
+                                <option value="" disabled selected>Chọn Loại Voucher</option>
+                                <option ng-repeat="lvc in listLVC" value="{{lvc.id}}">{{lvc.ten}}</option>
+                            </select>
                         </div>
                         <div>
-                            <label >Trạng thái:</label>
+                            <label>Trạng thái:</label>
                             <input type="text" ng-model="selectedVoucher.trangThai">
                         </div>
                     </div>
@@ -173,36 +182,35 @@
 </div>
 
 <!-- Detail khách hàng -->
-<div class="modal fade" id="readData">
+<div class="modal fade" id="DetailForm" tabindex="-1" aria-labelledby="userFormLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Profile detail</h4>
+                <h5 class="modal-title">Thông Tin Voucher</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body">
                 <form action="#" id="myForm1">
                     <div class="inputField">
                         <div>
                             <label>Tên Voucher:</label>
-                            <input type="text" id="Showten" ng-model="selectedVoucher.ten"  readonly>
+                            <input type="text" id="Showten" ng-model="selectedVoucher.ten" readonly>
                         </div>
                         <div>
                             <label>Giá giảm:</label>
-                            <input type="email" id="Showemail" ng-model="selectedVoucher.giaGiam"  readonly>
+                            <input type="email" id="Showemail" ng-model="selectedVoucher.giamGia" readonly>
                         </div>
                         <div>
                             <label>Giảm min:</label>
-                            <input type="text" id="ShowpassWord" ng-model="selectedVoucher.giamMin"  readonly>
+                            <input type="text" id="ShowpassWord" ng-model="selectedVoucher.giamMin" readonly>
                         </div>
                         <div>
                             <label>Giảm max:</label>
-                            <input type="text" id="ShowgioiTinh" ng-model="selectedVoucher.giamMax"  readonly>
+                            <input type="text" id="ShowgioiTinh" ng-model="selectedVoucher.giamMax" readonly>
                         </div>
                         <div>
                             <label>Điều kiện:</label>
-                            <input type="text" id="ShowSDT" ng-model="selectedVoucher.dieuKien"  readonly>
+                            <input type="text" id="ShowSDT" ng-model="selectedVoucher.dieuKien" readonly>
                         </div>
                         <div>
                             <label>Ngày kết thúc:</label>
@@ -218,7 +226,7 @@
                         </div>
                         <div>
                             <label>Trạng thái:</label>
-                            <input type="text" id="ShowtrangThai" ng-model="selectedVoucher.trangThai"   readonly>
+                            <input type="text" id="ShowtrangThai" ng-model="selectedVoucher.trangThai" readonly>
                         </div>
                     </div>
                 </form>
@@ -227,3 +235,27 @@
     </div>
 </div>
 </div>
+<style>
+    /* Style cho phần select */
+    select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        font-size: 16px;
+        color: #333;
+        cursor: pointer;
+    }
+
+    select:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    select option {
+        padding: 10px;
+    }
+
+</style>

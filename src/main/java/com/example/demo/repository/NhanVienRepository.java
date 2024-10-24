@@ -21,4 +21,5 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, String> {
                                         @Param("gioiTinh") String gioiTinh,
                                         @Param("diaChi") String diaChi,
                                         @Param("trangThai") Integer trangThai);
+
 }

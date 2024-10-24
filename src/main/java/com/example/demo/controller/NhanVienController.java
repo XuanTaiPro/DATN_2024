@@ -15,9 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("nhanvien")
@@ -67,18 +67,16 @@ public class NhanVienController {
         if (nhanVienRequest.getMa() == null || nhanVienRequest.getMa().isEmpty()) {//nếu mã chưa đc điền thì tự động thêm mã
             nhanVienRequest.setMa(generateCodeAll.generateMaNhanVien());
         }
-//        if (nvRepo.existsByMa(nhanVienRequest.getMa())) {
-//            return ResponseEntity.badRequest().body("mã đã tồn tại");
-//        }
         if (nhanVienRequest.getId() == null || nhanVienRequest.getId().isEmpty()) {
             nhanVienRequest.setId(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         }
+
         NhanVien nhanVien = nhanVienRequest.toEntity();
         nhanVien.setQuyen(qRepo.getById(nhanVienRequest.getIdQuyen()));
+        nhanVien.setNgayTao(LocalDateTime.now());
         nvRepo.save(nhanVien);
         return ResponseEntity.ok("thêm thành công");
     }
-
     @PutMapping("update/{id}")
     public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody NhanVienRequest nhanVienRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -86,44 +84,38 @@ public class NhanVienController {
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
         }
-        if (nvRepo.existsByMaAndIdNot(nhanVienRequest.getMa(), id)) {
-            return ResponseEntity.badRequest().body("Mã đã tồn tại tại nhân viên khác.");
-        }
-
-        if (nvRepo.findById(id).isPresent()) {
-            NhanVien nhanVien = nvRepo.findById(id).get();
-//            Quyen quyenAdmin = qRepo.findByTen("Admin");
-//            if (!nhanVien.getQuyen().getId().equals(quyenAdmin.getId())) {
-//                return ResponseEntity.badRequest().body("Bạn không có quyền sửa thông tin này");
-//            }
+        Optional<NhanVien> optionalNhanVien = nvRepo.findById(id);
+        if (optionalNhanVien.isPresent()) {
+            NhanVien nhanVien = optionalNhanVien.get();
             if (nhanVienRequest.getImg() == null || nhanVienRequest.getImg().isEmpty()) {
                 nhanVienRequest.setImg(nhanVien.getImg());
             }
             NhanVien nhanVienUpdate = nhanVienRequest.toEntity();
             nhanVienUpdate.setId(id);
             nhanVienUpdate.setQuyen(qRepo.getById(nhanVienRequest.getIdQuyen()));
-            nvRepo.save(nhanVienUpdate);
-            return ResponseEntity.ok("Update thành công ");
+            nhanVienUpdate.setMa(optionalNhanVien.get().getMa());
+            nhanVienUpdate.setNgaySua(LocalDateTime.now());
+            nhanVienUpdate.setNgayTao(optionalNhanVien.get().getNgayTao());
+            NhanVien savedNhanVien = nvRepo.save(nhanVienUpdate);  // Lưu thay đổi và lấy đối tượng đã lưu
+            return ResponseEntity.ok(savedNhanVien);  // Trả về đối tượng đã cập nhật
         } else {
             return ResponseEntity.badRequest().body("Không tìm thấy id cần update");
         }
     }
 
+
     @DeleteMapping("delete/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
         if (nvRepo.findById(id).isPresent()) {
-            NhanVien nhanVien = nvRepo.findById(id).get();
-//            Quyen quyenAdmin = qRepo.findByTen("Admin");
-//
-//            if (!nhanVien.getQuyen().getId().equals(quyenAdmin.getId())) {
-//                return ResponseEntity.badRequest().body("Bạn không có quyền xóa thông tin này");
-//            }
             nvRepo.deleteById(id);
-            return ResponseEntity.ok("Xóa thành công");
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Xóa thành công");
+            return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.badRequest().body("Không tìm thấy id cần xóa");
         }
     }
+
 
     @GetMapping("search-filter")
     public ResponseEntity<?> searchAndFilterNhanVien(

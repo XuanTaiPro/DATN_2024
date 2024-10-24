@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -42,10 +43,10 @@ public class KhachHangRequest {
     private Integer trangThai;
 
 //    @NotBlank(message = "Ngày tạo không được để trống")
-    private String ngayTao;
+    private LocalDateTime ngayTao;
 
 //    @NotBlank(message = "Ngày sửa không được để trống")
-    private String ngaySua;
+    private LocalDateTime ngaySua;
 
     public KhachHang toEntity() {
         if (this.id == null || this.id.isEmpty()) {

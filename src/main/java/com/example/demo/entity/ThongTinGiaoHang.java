@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import com.example.demo.dto.thongbao.ThongBaoResponse;
 import com.example.demo.dto.thongtingiaohang.ThongTinGiaoHangResponse;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,6 +39,7 @@ public class ThongTinGiaoHang {
 
     @ManyToOne
     @JoinColumn(name = "IDKHACHHANG")
+    @JsonIgnore
     private KhachHang khachHang;
 
     public ThongTinGiaoHangResponse toResponse() {

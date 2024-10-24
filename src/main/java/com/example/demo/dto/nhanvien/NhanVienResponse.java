@@ -17,8 +17,5 @@ public class NhanVienResponse {
     private String img;
     private String diaChi;
     private Integer trangThai;
-    private String ngayTao;
-    private String ngaySua;
     private String tenQuyen;
-    private Integer trangThaiQuyen;
 }

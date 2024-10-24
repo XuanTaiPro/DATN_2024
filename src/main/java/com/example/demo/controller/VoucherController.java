@@ -4,6 +4,8 @@ import com.example.demo.dto.thongbao.ThongBaoRequest;
 import com.example.demo.dto.thongbao.ThongBaoResponse;
 import com.example.demo.dto.voucher.VoucherRequest;
 import com.example.demo.dto.voucher.VoucherResponse;
+import com.example.demo.entity.KhachHang;
+import com.example.demo.entity.NhanVien;
 import com.example.demo.entity.ThongBao;
 import com.example.demo.entity.Voucher;
 import com.example.demo.repository.KhachHangRepository;
@@ -18,8 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 @CrossOrigin("*")
 @RestController
@@ -73,6 +77,7 @@ public class VoucherController {
 //        }
         Voucher voucher = voucherRequest.toEntity();
         voucher.setLoaiVoucher(lvcRepo.getById(voucherRequest.getIdLoaiVC()));
+        voucher.setNgayTao(LocalDateTime.now());
         vcRepo.save(voucher);
         return ResponseEntity.ok("thêm thành công");
     }
@@ -84,15 +89,26 @@ public class VoucherController {
             bindingResult.getAllErrors().forEach(error -> mess.append(error.getDefaultMessage()).append("\n"));
             return ResponseEntity.badRequest().body(mess.toString());
         }
-//        if (vcRepo.existsByMa(voucherRequest.getMa())) {
-//            return ResponseEntity.badRequest().body("mã đã tồn tại");
+//        if (vcRepo.findById(id).isPresent()) {
+//            Voucher voucher = voucherRequest.toEntity();
+//            voucher.setId(id);
+//            voucher.setLoaiVoucher(lvcRepo.getById(voucherRequest.getIdLoaiVC()));
+//            vcRepo.save(voucher);
+//            return ResponseEntity.ok("Update thành công ");
+//        } else {
+//            return ResponseEntity.badRequest().body("Không tìm thấy id cần update");
 //        }
-        if (vcRepo.findById(id).isPresent()) {
-            Voucher voucher = voucherRequest.toEntity();
-            voucher.setId(id);
-            voucher.setLoaiVoucher(lvcRepo.getById(voucherRequest.getIdLoaiVC()));
-            vcRepo.save(voucher);
-            return ResponseEntity.ok("Update thành công ");
+        Optional<Voucher> optionalVoucher = vcRepo.findById(id);
+        if (optionalVoucher.isPresent()) {
+
+            Voucher voucherUpdate = voucherRequest.toEntity();
+            voucherRequest.setId(id);
+            voucherUpdate.setLoaiVoucher(lvcRepo.getById(voucherRequest.getIdLoaiVC()));
+            voucherUpdate.setMa(optionalVoucher.get().getMa());
+            voucherUpdate.setNgaySua(LocalDateTime.now());
+            voucherUpdate.setNgayTao(optionalVoucher.get().getNgayTao());
+            Voucher savedVoucher = vcRepo.save(voucherUpdate);  // Lưu thay đổi và lấy đối tượng đã lưu
+            return ResponseEntity.ok(savedVoucher);  // Trả về đối tượng đã cập nhật
         } else {
             return ResponseEntity.badRequest().body("Không tìm thấy id cần update");
         }

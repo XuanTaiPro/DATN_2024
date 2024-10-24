@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -74,6 +75,7 @@ public class ThongBaoController {
 //        }
         ThongBao thongBao = thongBaoRequest.toEntity();
         thongBao.setKhachHang(khRepo.getById(thongBaoRequest.getIdKH()));
+        thongBao.setNgayGui(LocalDateTime.now());
         tbRepo.save(thongBao);
         return ResponseEntity.ok("thêm thành công");
     }
@@ -92,6 +94,8 @@ public class ThongBaoController {
             ThongBao thongBao = thongBaoRequest.toEntity();
             thongBao.setId(id);
             thongBao.setKhachHang(khRepo.getById(thongBaoRequest.getIdKH()));
+            thongBao.setNgayGui(LocalDateTime.now());
+            thongBao.setNgayDoc(LocalDateTime.now());
             tbRepo.save(thongBao);
             return ResponseEntity.ok("Update thành công ");
         } else {

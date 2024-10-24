@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -18,9 +20,9 @@ public class VoucherResponse {
 
     private String giamGia;
 
-    private String ngayTao;
+    private LocalDateTime ngayTao;
 
-    private String ngaySua;
+    private LocalDateTime ngaySua;
 
     private String giamMin;
 
@@ -33,8 +35,6 @@ public class VoucherResponse {
     private Integer soLuong;
 
     private Integer trangThai;
-
-    private String maLoaiVC;
 
     private String tenLoaiVC;
 

@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -43,10 +45,10 @@ public class KhachHang {
     private Integer trangThai;
 
     @Column(name = "NGAYTAO")
-    private String ngayTao;
+    private LocalDateTime ngayTao;
 
     @Column(name = "NGAYSUA")
-    private String ngaySua;
+    private LocalDateTime ngaySua;
 
     public KhachHangResponse toResponse() {
         return new KhachHangResponse(id, ma, ten, email, gioiTinh, sdt, diaChi, trangThai);

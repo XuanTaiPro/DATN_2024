@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -36,7 +37,7 @@ public class NhanVienRequest {
     @NotBlank(message = "Giới tính Không được để trống")
     private String gioiTinh;
 
-    @NotBlank(message = "IMG Không được để trống")
+//    @NotBlank(message = "IMG Không được để trống")
     private String img;
 
     @NotBlank(message = "Địa chỉ Không được để trống")
@@ -45,11 +46,11 @@ public class NhanVienRequest {
     @NotNull(message = "Trạng thái Không được để trống")
     private Integer trangThai;
 
-    @NotBlank(message = "Ngày tạo Không được để trống")
-    private String ngayTao;
+//    @NotBlank(message = "Ngày tạo Không được để trống")
+    private LocalDateTime ngayTao;
 
-    @NotBlank(message = "Ngày sửa Không được để trống")
-    private String ngaySua;
+//    @NotBlank(message = "Ngày sửa Không được để trống")
+    private LocalDateTime ngaySua;
 
     @NotNull(message = "id quyền Không được để trống")
     private String idQuyen;
@@ -59,6 +60,6 @@ public class NhanVienRequest {
         if (this.id == null || this.id.isEmpty()) {
             this.id = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         }
-        return new NhanVien(id, ma, ten, email, passw, gioiTinh, img, diaChi, trangThai,ngayTao,ngaySua, null);
+        return new NhanVien(id, ma, ten, email, passw, gioiTinh, img, diaChi, trangThai,null,null, null);
     }
 }

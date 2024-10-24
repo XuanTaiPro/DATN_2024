@@ -2,8 +2,9 @@
     <h1>Quản lý khách hàng</h1>
     <div class="row">
         <div class="col-12">
-            <button class="btn btn-primary newUser" data-bs-toggle="modal" data-bs-target="#khForm">Create khách hàng <i
-                    class="bi bi-people"></i></button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal">
+                Thêm Khách Hàng
+            </button>
         </div>
     </div>
     <div class="row">
@@ -35,11 +36,13 @@
                     <td>{{ khachHang.gioiTinh }}</td>
                     <td>{{ khachHang.sdt }}</td>
                     <td>{{ khachHang.diaChi }}</td>
-                    <td>{{ khachHang.trangThai }}</td>
                     <td>
-                        <button class="btn btn-success" data-bs-target="#readData" ng-click="openDetailModal(khachHang)"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-primary" ng-click="openUpdateModal(khachHang)"><i class="bi bi-pencil-square"></i></button>
-                        <button class="btn btn-danger" ng-click="deleteKhachHang(khachHang.id)"><i class="bi bi-trash"></i></button>
+                        {{ khachHang.trangThai == 1 ? 'Hoạt động' : 'Ngưng hoạt động' }}
+                    </td>
+                    <td>
+                        <button class="btn btn-success" ng-click="viewDetail(khachHang)" data-bs-toggle="modal" data-bs-target="#DetailForm"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-primary" ng-click="openUpdateModal(khachHang)"  data-bs-toggle="modal" data-bs-target="#UpdateForm"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-danger" ng-click="delete(khachHang.id)"><i class="bi bi-trash"></i></button>
 
                     </td>
                 </tr>
@@ -51,15 +54,15 @@
 
 <!--add nhân viên-->
 
-<div class="modal fade" id="khForm" >
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Fill the Form</h4>
+                <h5 class="modal-title" id="productModalLabel">Thêm Khách Hàng</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="#" id="myForm" ng-submit="addKhachHang()">
+                <form action="#!/khachhang" id="addKhachHang" ng-submit="addKhachHang()">
                     <div class="inputField">
                         <div>
                             <label for="ten">Họ và tên:</label>
@@ -75,7 +78,11 @@
                         </div>
                         <div>
                             <label for="gioiTinh">Giới tính:</label>
-                            <input type="text" ng-model="gioiTinh"  id="gioiTinh" required>
+                            <select ng-model="gioiTinh" id="gioiTinh" class="short-select" required>
+                                <option value="" disabled selected>Chọn Giới Tính</option>
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            </select>
                         </div>
                         <div>
                             <label for="sdt">SDT :</label>
@@ -87,30 +94,34 @@
                         </div>
                         <div>
                             <label for="trangThai">Trạng thái:</label>
-                            <input type="text" ng-model="trangThai" id="trangThai" required>
+                            <select ng-model="trangThai" id="trangThai" class="short-select" required>
+                                <option value="" disabled selected>Chọn Trạng Thái</option>
+                                <option value="1">Hoạt động</option>
+                                <option value="0">Ngưng hoạt động</option>
+                            </select>
                         </div>
                     </div>
                 </form>
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="myForm" class="btn btn-primary submit">Submit</button>
+                <button type="submit" form="addKhachHang" class="btn btn-primary submit">Submit</button>
             </div>
         </div>
     </div>
 </div>
-<!-- update nhân viên-->
 
-<div class="modal fade" id="updateForm" tabindex="-1">
+<!-- update khách hàng-->
+
+<div class="modal fade" id="UpdateForm" tabindex="-1" aria-labelledby="userFormLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Cập Nhật Khách Hàng</h4>
+                <h5 class="modal-title">Cập Nhật Khách Hàng</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="#" id="updateKhachHang" ng-submit="updateKhachHang()">
+                <form action="#!/khachhang" id="updateKhachHang" ng-submit="updateKhachHang()">
                     <div class="inputField">
                         <div>
                             <label >Họ và tên:</label>
@@ -125,8 +136,12 @@
                             <input type="text" ng-model="selectedKhachHang.passw" id="passwUpdate" >
                         </div>
                         <div>
-                            <label>Giới tính:</label>
-                            <input type="text" ng-model="selectedKhachHang.gioiTinh" id="gioiTinhUpdate" >
+                            <label for="gioiTinhUpdate">Giới tính:</label>
+                            <select ng-model="selectedKhachHang.gioiTinh" id="gioiTinhUpdate" class="short-select" required>
+                                <option value="" disabled selected>Chọn Giới Tính</option>
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            </select>
                         </div>
                         <div>
                             <label >SDT :</label>
@@ -137,8 +152,12 @@
                             <input type="text" ng-model="selectedKhachHang.diaChi" id="diaChiUpdate">
                         </div>
                         <div>
-                            <label >Trạng thái:</label>
-                            <input type="text" ng-model="selectedKhachHang.trangThai" id="trangThaiUpdate" >
+                            <label for="trangThaiUpdate">Trạng thái:</label>
+                            <select ng-model="selectedKhachHang.trangThai" id="trangThaiUpdate" class="short-select" required>
+                                <option value="" disabled>Chọn Trạng Thái</option>
+                                <option value="1">Hoạt động</option>
+                                <option value="0">Ngưng hoạt động</option>
+                            </select>
                         </div>
                     </div>
                 </form>
@@ -146,22 +165,20 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="submit" form="updateKhachHang" class="btn btn-primary">Cập Nhật</button>
+                <button type="submit" form="updateKhachHang" class="btn btn-primary submit">Cập Nhật</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Detail khách hàng -->
-<div class="modal fade" id="readData">
+<div class="modal fade" id="DetailForm" tabindex="-1" aria-labelledby="userFormLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-
             <div class="modal-header">
-                <h4 class="modal-title">Profile detail</h4>
+                <h5 class="modal-title">Thông Tin Nhân Viên</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body">
                 <form action="#" id="myForm1">
                     <div class="inputField">
@@ -199,4 +216,30 @@
         </div>
     </div>
 </div>
-</div>
+<style>
+    /* Style cho phần select */
+    select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        font-size: 16px;
+        color: #333;
+        cursor: pointer;
+    }
+
+    select:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    select option {
+        padding: 10px;
+    }
+
+    .short-select {
+        width: 375px;
+    }
+</style>

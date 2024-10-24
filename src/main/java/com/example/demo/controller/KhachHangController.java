@@ -4,6 +4,7 @@ import com.example.demo.dto.khachhang.KhachHangRequest;
 import com.example.demo.dto.khachhang.KhachHangResponse;
 import com.example.demo.dto.voucher.VoucherResponse;
 import com.example.demo.entity.KhachHang;
+import com.example.demo.entity.NhanVien;
 import com.example.demo.entity.ThongBao;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.service.GenerateCodeAll;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -99,6 +101,7 @@ public class KhachHangController {
             khachHangRequest.setId(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         }
         KhachHang khachHang = khachHangRequest.toEntity();
+        khachHang.setNgayTao(LocalDateTime.now());
         khRepo.save(khachHang);
         return ResponseEntity.ok("thêm thành công");
     }
@@ -111,11 +114,23 @@ public class KhachHangController {
             System.out.println(mess.toString());
             return ResponseEntity.badRequest().body(mess.toString());
         }
-        if (khRepo.findById(id).isPresent()) {
-            KhachHang khachHang = khachHangRequest.toEntity();
-            khachHang.setId(id);
-            khRepo.save(khachHang);
-            return ResponseEntity.ok("Update thành công ");
+//        if (khRepo.findById(id).isPresent()) {
+//            KhachHang khachHang = khachHangRequest.toEntity();
+//            khachHang.setId(id);
+//            khRepo.save(khachHang);
+//            return ResponseEntity.ok("Update thành công ");
+//        } else {
+//            return ResponseEntity.badRequest().body("Không tìm thấy id cần update");
+//        }
+        Optional<KhachHang> optionalKhachHang = khRepo.findById(id);
+        if (optionalKhachHang.isPresent()) {
+            KhachHang khachHang = optionalKhachHang.get();
+            KhachHang khachHangUpdate = khachHangRequest.toEntity();
+            khachHangUpdate.setId(id);
+            khachHangUpdate.setNgaySua(LocalDateTime.now());
+            khachHang.setNgayTao(optionalKhachHang.get().getNgayTao());
+            KhachHang saveKH = khRepo.save(khachHangUpdate);  // Lưu thay đổi và lấy đối tượng đã lưu
+            return ResponseEntity.ok(saveKH);  // Trả về đối tượng đã cập nhật
         } else {
             return ResponseEntity.badRequest().body("Không tìm thấy id cần update");
         }
